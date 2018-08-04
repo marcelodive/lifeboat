@@ -9,12 +9,15 @@ import { Location } from '@angular/common';
 })
 export class PresenceRecordComponent implements OnInit {
 
+  selectedBoat: string;
+
   constructor(
     private route: ActivatedRoute,
     private location: Location
   ) { }
 
   ngOnInit() {
+    this.selectedBoat = this.route.snapshot.paramMap.get('boat');
   }
 
 }

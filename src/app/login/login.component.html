@@ -1,20 +1,27 @@
-<div class="input-group mb-3">
-  <input 
-    id="boat-selector" 
-    type="text" 
-    class="form-control" 
-    placeholder="Nome do bote" 
-    aria-label="Nome do bote"
-    [(ngModel)]="selectedBoat"   
-    [ngbTypeahead]="searchBoat"
-  />
-  <div class="input-group-append">
-    <button 
-      class="btn btn-outline-secondary" 
-      type="button"
-      [disabled]="isLoginButtonDisabled()"
-      routerLink="/boat/presence-record/{{selectedBoat}}">
-      Entrar
-    </button>
+<div>
+  <img id="logo-bote"
+    src="assets/images/logo_botes.jpg" 
+    class="roundex mx-auto d-block img-fluid logo" 
+    alt="Logo Verbo nos Lares" />
+
+  <div class="input-group mb-3">
+    <input 
+      id="boat-selector" 
+      type="text" 
+      class="form-control" 
+      placeholder="Nome do bote" 
+      aria-label="Nome do bote"
+      [(ngModel)]="selectedBoat"   
+      [ngbTypeahead]="searchBoat"
+    />
+    <div class="input-group-append">
+      <button 
+        class="btn btn-outline-secondary" 
+        type="button"
+        [disabled]="isLoginButtonDisabled()"
+        routerLink="/boat/presence-record/{{selectedBoat}}">
+        Entrar
+      </button>
+    </div>
   </div>
 </div>
