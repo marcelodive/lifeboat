@@ -11,7 +11,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 export class LoginComponent implements OnInit {
 
   public selectedBoat: string;
-  private boats: any;
+  private boats: string[];
 
   searchBoat = (searchedTerm: Observable<string>) => {
     return searchedTerm.pipe(
@@ -31,9 +31,13 @@ export class LoginComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    this.http.get('localhost:8080/boats')
-    .subscribe((response) => {
-      this.boats = response;
-    }) ;
+    this.boats = [
+      '1', '2', '3'
+    ]
+
+    this.http.get('http://localhost:8080/boats')
+      .subscribe((data) => {
+        console.log(data);
+      });
   }
 }

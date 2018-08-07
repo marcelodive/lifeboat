@@ -5,10 +5,11 @@ use \RedBeanPHP\R as R;
 
 // Routes
 $app->get('/boats', function (Request $request, Response $response, array $args) {
-    $boats = R::find('boats');
+    $boats = R::findAll('boats');
 
-    $response->getBody()->write(var_export($boats, true));
-    return $response;
+    header("Content-Type: application/json");
+    echo json_encode($boats);
+    exit;
 });
 
 $app->get('/{boat}/members', function (Request $request, Response $response, array $args) {
