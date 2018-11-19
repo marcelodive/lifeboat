@@ -21,7 +21,7 @@ $app->get('/boat/{id}/members/{selectedDate}', function (Request $request, Respo
         $presence  = R::findOne( 'presence', 
             ' member_id = ? AND boat_id = ? AND date = ?', [$member['id'], $boatId, $selectedDate] );
         
-        $member->isPresent = !empty($presence);
+        $member->is_present = !empty($presence) ? $presence->is_present : false;
     }
     
     return $response->withJson($boatMembers);
@@ -34,6 +34,8 @@ $app->get('/member/presence/{memberId}/{boatId}/{selectedDate}/{isPresent}', fun
     $selectedDate = $args['selectedDate'];
     $isPresent = $args['isPresent'];
 
+    $this->logger->info("/member/presence/$memberId/$boatId/$selectedDate/$isPresent");
+
     $presence  = R::findOne( 'presence', 
         ' member_id = ? AND boat_id = ? AND date = ?', [$memberId, $boatId, $selectedDate] );
 
@@ -43,7 +45,7 @@ $app->get('/member/presence/{memberId}/{boatId}/{selectedDate}/{isPresent}', fun
         $presence['boat_id'] = $boatId;
         $presence['date'] = $selectedDate;
     }
-
     $presence['is_present'] = $isPresent;
+
     return $response->withJson(R::store($presence));
 });

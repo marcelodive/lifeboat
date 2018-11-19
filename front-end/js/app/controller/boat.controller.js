@@ -9,6 +9,9 @@ angular.module('lifeboat')
     const selectedDate = $scope.selectedDate.toISOString().substring(0,10);
     boatFactory.getMembers($scope.boat.id, selectedDate).then((response) => {
       $scope.members = Object.values(response.data);
+      $scope.members.forEach((member) => {
+        member.is_present = (member.is_present == 'true');        
+      });
     });
   }
 
