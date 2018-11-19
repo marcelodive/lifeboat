@@ -1,0 +1,38 @@
+<div>
+    <p ng-show="!selectedDate">Selecione o dia do encontro:</p>
+    <md-datepicker ng-model="selectedDate" 
+        ng-change="onDateSelect()" 
+        md-placeholder="01/01/1990" 
+        md-open-on-focus></md-datepicker>
+</div>
+<div ng-show="selectedDate">
+    <md-toolbar class="md-theme-light">
+        <h2 class="md-toolbar-tools">
+            <span>Presença</span>
+        </h2>
+        </md-toolbar>
+    <div>
+        <div ng-repeat="member in members | orderBy:'name'">            
+            <md-whiteframe style="padding: 2%;"
+                class="md-whiteframe-1dp" 
+                layout="row" 
+                layout-align="space-between center">
+                <span layout layout-align="center center">
+                    <md-checkbox style="margin-bottom: 0;"
+                        ng-model="member.isPresent" 
+                        ng-change="setPresenceForMember(member.id, member.isPresent)"
+                        aria-label="Checkbox">
+                    </md-checkbox>
+                </span>
+                <span style="width: 100%;" 
+                    title="{{member.name}}" 
+                    alt="{{member.name}}">
+                    {{ member.name }}
+                </span>
+                <span>
+                    <i class="material-icons">more_vert</i>
+                </span>
+            </md-whiteframe>
+        </div>
+    </div>
+</div>
