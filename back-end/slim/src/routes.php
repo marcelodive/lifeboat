@@ -4,6 +4,8 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use \RedBeanPHP\R as R;
 
+require_once('./controller/member.controller.php');
+
 // boats
 $app->get('/boats', function (Request $request, Response $response, array $args) {
     $this->logger->info("/boats");
@@ -28,11 +30,12 @@ $app->get('/boat/{id}/members/{selectedDate}', function (Request $request, Respo
 });
 
 // members
-$app->get('/member/presence/{memberId}/{boatId}/{selectedDate}/{isPresent}', function (Request $request, Response $response, array $args) {
-    $memberId = $args['memberId'];
-    $boatId = $args['boatId'];
-    $selectedDate = $args['selectedDate'];
-    $isPresent = $args['isPresent'];
+$app->post('/member/presence', function ($request, $response, $args) {
+    $bodyData = $request->getParsedBody();
+    $memberId = $bodyData['memberId'];
+    $boatId = $bodyData['boatId'];
+    $selectedDate = $bodyData['selectedDate'];
+    $isPresent = $bodyData['isPresent'];
 
     $this->logger->info("/member/presence/$memberId/$boatId/$selectedDate/$isPresent");
 

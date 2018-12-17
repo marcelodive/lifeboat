@@ -1,5 +1,5 @@
 angular.module('lifeboat')
-.controller('BoatController', function BoatController($scope, boatFactory) {
+.controller('BoatController', function BoatController($scope, boatFactory, $mdDialog) {
   const localStorage = window.localStorage;
   $scope.checked = [];
 
@@ -24,6 +24,42 @@ angular.module('lifeboat')
         });
     }
   }
+
+  $scope.registryMember = (member) => {
+    if (member) {
+      boatFactory.registryMember(member)
+        .then((response) => {
+          console.log(response);
+        });
+    }
+  }
+
+  $scope.editMember = (member) => {
+    console.log(member);
+    $scope.selectedMember = member;
+    showEditionDialog();
+  }
+
+  function showEditionDialog () {
+    $mdDialog.show({
+      controller: BoatController,
+      templateUrl: './../../html/boat.user-edit.html',
+      parent: angular.element(document.body),
+      scope: $scope.$new(),
+      // targetEvent: ev,
+      clickOutsideToClose:false,
+      fullscreen: false // Only for -xs, -sm breakpoints.
+    })
+    .then(function(answer) {
+      $scope.status = 'You said the information was "' + answer + '".';
+    }, function() {
+      $scope.status = 'You cancelled the dialog.';
+    });
+  };
+
+  $scope.hideDialog = function() {
+    $mdDialog.hide();
+  };
   
   function init () {
     $scope.boat = JSON.parse(localStorage.getItem('boat'));
