@@ -2,7 +2,7 @@
     <form ng-cloak>
       <md-toolbar>
         <div class="md-toolbar-tools">
-          <h2 ng-if="selectedMember.id">Criar membro</h2>
+          <h2 ng-if="!selectedMember.id">Criar membro</h2>
           <h2 ng-if="selectedMember.id">Editar membro</h2>
           <span flex></span>
           <md-button class="md-icon-button" ng-click="hideDialog()">
@@ -11,7 +11,7 @@
         </div>
       </md-toolbar>
       <md-dialog-content>
-        <div class="md-dialog-content">
+        <div class="md-dialog-content" layout="column" layout-align="center start">
             <md-input-container class="">
                 <label>Nome</label>
                 <input ng-model="selectedMember.name">
@@ -27,7 +27,7 @@
             <md-input-container class="">           
                 <md-switch class="md-primary" 
                     ng-model="selectedMember.isMember">
-                    Membro?
+                    Membro da igreja?
                 </md-switch>
             </md-input-container>
             <md-input-container class="">           
@@ -56,7 +56,8 @@
                 Cancelar
             </md-button>
             <span flex></span>
-            <md-button ng-click="registryMember(selectedMember)">
+            <md-button ng-disabled="!selectedMember.name" 
+                ng-click="registryMember(selectedMember)">
                 Registrar
             </md-button>
       </md-dialog-actions>

@@ -27,15 +27,16 @@ angular.module('lifeboat')
 
   $scope.registryMember = (member) => {
     if (member) {
+      member.boat_id = $scope.boat.id;
       boatFactory.registryMember(member)
-        .then((response) => {
-          console.log(response);
+        .then(() => {
+          $scope.hideDialog();
+          //falta pegar o usuário e atualizar a lista de membros do bote
         });
     }
   }
 
-  $scope.editMember = (member) => {
-    console.log(member);
+  $scope.editMember = (member = {}) => {
     $scope.selectedMember = member;
     showEditionDialog();
   }
@@ -46,14 +47,8 @@ angular.module('lifeboat')
       templateUrl: './../../html/boat.user-edit.html',
       parent: angular.element(document.body),
       scope: $scope.$new(),
-      // targetEvent: ev,
       clickOutsideToClose:false,
       fullscreen: false // Only for -xs, -sm breakpoints.
-    })
-    .then(function(answer) {
-      $scope.status = 'You said the information was "' + answer + '".';
-    }, function() {
-      $scope.status = 'You cancelled the dialog.';
     });
   };
 

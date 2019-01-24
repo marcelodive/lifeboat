@@ -10,7 +10,7 @@
         <h2 class="md-toolbar-tools">
             <span>Presença</span>
         </h2>
-        </md-toolbar>
+    </md-toolbar>
     <div>
         <div ng-repeat="member in members | orderBy:'name'">            
             <md-whiteframe style="padding: 2%;"
@@ -34,5 +34,8 @@
                 </span>
             </md-whiteframe>
         </div>
+        <md-button ng-click="editMember()" class="md-raised md-primary">
+            Adicionar novo membro
+        </md-button>
     </div>
 </div>
