@@ -7,13 +7,13 @@ use \RedBeanPHP\R as R;
 // require_once('./controller/member.controller.php');
 
 // boats
-$app->get('/boats', function (Request $request, Response $response, array $args) {
+$app->get('/boats', function ($request, $response, $args) {
     $this->logger->info("/boats");
     $boats = R::findAll('boats');
     return $response->withJson($boats);
 });
 
-$app->get('/boat/{id}/members/{selectedDate}', function (Request $request, Response $response, array $args) {
+$app->get('/boat/{id}/members/{selectedDate}', function ($request, $response, $args) {
     $boatId = $args['id'];
     $selectedDate = $args['selectedDate'];
     $this->logger->info("/boats/$boatId/members/$selectedDate");
@@ -21,13 +21,53 @@ $app->get('/boat/{id}/members/{selectedDate}', function (Request $request, Respo
 
     foreach ($boatMembers as $member) {
         $presence  = R::findOne( 'presence', 
-            ' member_id = ? AND boat_id = ? AND date = ?', [$member['id'], $boatId, $selectedDate] );
+            ' member_id = ? AND boat_id = ? AND date = ?', 
+            [$member['id'], $boatId, $selectedDate] 
+        );
         
         $member->is_present = !empty($presence) ? $presence->is_present : false;
     }
     
     return $response->withJson($boatMembers);
 });
+
+$app->get('/boat/{id}/ministration/{selectedDate}', function ($request, $response, $args) {
+    $boatId = $args['id'];
+    $selectedDate = $args['selectedDate'];
+
+    $this->logger->info("/boat/{id}/ministration/{selectedDate}");
+    $ministration = R::findOne('ministrations',
+        ' boat_id = ? AND date = ?',
+        [$boatId, $selectedDate] 
+    );
+    return $response->withJson($ministration);
+});
+
+$app->post('/boat/ministration', function ($request, $response, $args) {
+    $bodyData = $request->getParsedBody();
+    $boatId = $bodyData['boatId'];
+    $selectedDate = $bodyData['selectedDate'];
+    $ministration = $bodyData['ministration'];    
+
+    $this->logger->info("/boat/$boatId/ministration/$selectedDate");
+
+    $ministrationBean  = R::findOne('ministrations', 
+        ' boat_id = ? AND date = ?', 
+        [$boatId, $selectedDate] 
+    );
+
+    if (empty($ministrationBean)) {
+        $ministrationBean = R::dispense('ministrations');
+        $ministrationBean->date = $selectedDate;
+        $ministrationBean->boat_id = $boatId;
+    }
+
+    $ministrationBean->ministration = $ministration;
+
+    return $response->withJson(R::store($ministrationBean));
+});
+
+
 
 // members
 $app->post('/member/presence', function ($request, $response, $args) {
@@ -40,7 +80,9 @@ $app->post('/member/presence', function ($request, $response, $args) {
     $this->logger->info("/member/presence/$memberId/$boatId/$selectedDate/$isPresent");
 
     $presence  = R::findOne('presence', 
-        ' member_id = ? AND boat_id = ? AND date = ?', [$memberId, $boatId, $selectedDate] );
+        ' member_id = ? AND boat_id = ? AND date = ?', 
+        [$memberId, $boatId, $selectedDate] 
+    );
 
     if (empty($presence)){
         $presence = R::dispense('presence');

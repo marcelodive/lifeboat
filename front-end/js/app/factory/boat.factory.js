@@ -5,7 +5,7 @@ angular.module('lifeboat')
       return $http.get(API.url + 'boats');
     },
 
-    getMembers: (boatId,selectedDate) => {
+    getMembers: (boatId, selectedDate) => {
       return $http.get(API.url + `boat/${boatId}/members/${selectedDate}`);
     },
 
@@ -39,6 +39,22 @@ angular.module('lifeboat')
         url: API.url + `member/disconnect`,
         method: 'POST',
         data: encodedMemberId,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+      });
+    },
+
+    getMinistration: (boatId, selectedDate) => {
+      return $http.get(API.url + `boat/${boatId}/ministration/${selectedDate}`);
+    },
+
+    saveMinistration: (ministration, boatId, selectedDate) => {
+      const ministrationObject = {ministration, boatId, selectedDate};
+      const encodedMinistration = utilsFactory.JSON_to_URLEncoded(ministrationObject);
+
+      return $http({
+        url: API.url + `boat/ministration`,
+        method: 'POST',
+        data: encodedMinistration,
         headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
       });
     }

@@ -1,9 +1,24 @@
-<div>
-    <p ng-show="!selectedDate">Selecione o dia do encontro:</p>
-    <md-datepicker ng-model="selectedDate" 
-        ng-change="onDateSelect()" 
-        md-placeholder="01/01/1990" 
-        md-open-on-focus></md-datepicker>
+<div layout="row" layout-align="space-between center">
+    <md-button class="md-raised" ng-click="backToSelectBoat()">
+        <span layout="row" layout-align="center center">    
+            <i class="material-icons">
+                keyboard_backspace
+            </i>
+            <span ng-if="!selectedDate">Voltar</span>
+        </span>
+    </md-button>
+    <span layout="column" layout-align="center center">
+        <p ng-show="!selectedDate"><strong>Selecione o dia do encontro:</strong></p>
+        <md-datepicker ng-model="selectedDate" 
+            ng-change="onDateSelect()" 
+            md-placeholder="01/01/1990" 
+            md-open-on-focus>
+        </md-datepicker>    
+    </span>
+    <p><strong>{{ boat.name }}</strong></p>
+    <md-button ng-show="selectedDate" ng-click="editMember()" class="md-raised md-primary">
+        Adicionar novo membro
+    </md-button>
 </div>
 <div ng-show="selectedDate">
     <md-toolbar class="md-theme-light">
@@ -34,8 +49,39 @@
                 </span>
             </md-whiteframe>
         </div>
-        <md-button ng-click="editMember()" class="md-raised md-primary">
-            Adicionar novo membro
-        </md-button>
+    </div>
+    <br>
+    <div>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 class="md-flex">Ministração</h2>
+            </div>
+        </md-toolbar>
+        <md-whiteframe style="padding: 2%;"
+            class="md-whiteframe-1dp" 
+            layout="row">
+            <md-input-container class="md-block" flex-gt-xs>
+                <label>
+                    <span layout="row" ng-if="ministrationState == 'Salvando ministração...'" >
+                        {{ ministrationState }} 
+                        <md-progress-circular                            
+                            md-diameter="15px"
+                            md-mode="indeterminate">
+                        </md-progress-circular>
+                    </span>
+                    <span ng-if="ministrationState == 'Ministração salva!'">
+                        {{ ministrationState }}
+                    </span>
+                    <span ng-if="ministrationState == ''" >
+                        "Descreva como foi a ministração e o(s) versículo(s) chave"
+                    </span>
+                </label>
+                <textarea 
+                    ng-model="ministration"
+                    ng-model-options="{ debounce: 1000 }"
+                    ng-change="saveMinistration(ministration)">
+                </textarea>
+            </md-input-container>
+        </md-whiteframe>
     </div>
 </div>

@@ -1,24 +1,28 @@
 angular.module('lifeboat')
-.controller('BoatController', function BoatController($scope, boatFactory, $mdDialog) {
+.controller('BoatController', function BoatController($scope, boatFactory, $mdDialog, $window) {
   const localStorage = window.localStorage;
+  $scope.ministrationState = '';
   $scope.checked = [];
 
-  init();
-
   $scope.onDateSelect = () => {
-    const selectedDate = $scope.selectedDate.toISOString().substring(0,10);
-    boatFactory.getMembers($scope.boat.id, selectedDate).then((response) => {
+    $scope.selectedDate = $scope.selectedDate.toISOString().substring(0,10);
+    $scope.members = [];
+    $scope.ministration = '';
+    
+    boatFactory.getMembers($scope.boat.id, $scope.selectedDate).then((response) => {
       $scope.members = Object.values(response.data);
       $scope.members.forEach((member) => {
         member.is_present = (member.is_present == 'true');        
       });
     });
+    boatFactory.getMinistration($scope.boat.id, $scope.selectedDate).then((response) => {
+      $scope.ministration = (response.data) ? response.data.ministration: '';      
+    });    
   }
 
   $scope.setPresenceForMember = (memberId, isPresent) => {
-    const selectedDate = $scope.selectedDate.toISOString().substring(0,10);
     if(isPresent !== undefined){
-      boatFactory.setPresenceForMember(memberId, $scope.boat.id, selectedDate, isPresent)
+      boatFactory.setPresenceForMember(memberId, $scope.boat.id, $scope.selectedDate, isPresent)
         .then((response) => {
           console.log(response);
         });
@@ -35,7 +39,7 @@ angular.module('lifeboat')
         } else {
           member = newMember;
         }    
-        $scope.hideDialog();      
+        $mdDialog.hide();     
       });
     }
   }
@@ -51,14 +55,31 @@ angular.module('lifeboat')
       const disconnectMember = window.confirm(message);
       if (disconnectMember) {
         boatFactory.disconnectMember(selectedMember.id).then((response) => {
-          window.alert(`O membro "${selectedMember.name}" foi desligado com sucesso`);
+          window.alert(`O membro "${selectedMember.name}" foi desligado`);
           selectedMember.disconnected = 1;
-          $scope.hideDialog();
+          $mdDialog.hide();
         });
       } else {
-        $scope.hideDialog();
+        $mdDialog.hide();
       }
     }
+  }
+
+  $scope.saveMinistration = (ministration) => {
+    if (ministration) {
+      $scope.ministrationState = "Salvando ministração...";
+      boatFactory.saveMinistration(ministration, $scope.boat.id, $scope.selectedDate).then((response) => {
+        $scope.ministrationState = "Ministração salva!";
+      })
+    }
+  }
+
+  $scope.hideDialog = () => {
+    $mdDialog.hide();
+  };
+
+  $scope.backToSelectBoat = () => {
+    $window.location.href = '/';
   }
 
   function showEditionDialog () {
@@ -71,15 +92,11 @@ angular.module('lifeboat')
       fullscreen: false // Only for -xs, -sm breakpoints.
     });
   };
-
-  $scope.hideDialog = function() {
-    $mdDialog.hide();
-  };
   
-  function init () {
+  (function init () {
     $scope.boat = JSON.parse(localStorage.getItem('boat'));
     if (!$scope.boat) {
       $window.location.href = '/';
     } 
-  }
+  })();
 });
