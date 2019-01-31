@@ -28,17 +28,37 @@ angular.module('lifeboat')
   $scope.registryMember = (member) => {
     if (member) {
       member.boat_id = $scope.boat.id;
-      boatFactory.registryMember(member)
-        .then(() => {
-          $scope.hideDialog();
-          //falta pegar o usuário e atualizar a lista de membros do bote
-        });
+      boatFactory.registryMember(member).then((response) => {
+        const newMember = response.data;
+        if (newMember.id != member.id) {
+          $scope.members.push(newMember);
+        } else {
+          member = newMember;
+        }    
+        $scope.hideDialog();      
+      });
     }
   }
 
   $scope.editMember = (member = {}) => {
     $scope.selectedMember = member;
     showEditionDialog();
+  }
+
+  $scope.disconnectMember = (selectedMember) => {
+    if (selectedMember.id) {
+      const message = `Você deseja desligar "${selectedMember.name}" de seu bote?`;
+      const disconnectMember = window.confirm(message);
+      if (disconnectMember) {
+        boatFactory.disconnectMember(selectedMember.id).then((response) => {
+          window.alert(`O membro "${selectedMember.name}" foi desligado com sucesso`);
+          selectedMember.disconnected = 1;
+          $scope.hideDialog();
+        });
+      } else {
+        $scope.hideDialog();
+      }
+    }
   }
 
   function showEditionDialog () {

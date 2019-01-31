@@ -5,8 +5,12 @@
           <h2 ng-if="!selectedMember.id">Criar membro</h2>
           <h2 ng-if="selectedMember.id">Editar membro</h2>
           <span flex></span>
-          <md-button class="md-icon-button" ng-click="hideDialog()">
-            <span>X</span>
+          <md-button class="md-icon-button" 
+            ng-if="selectedMember.id"
+            ng-click="disconnectMember(selectedMember)">
+            <i class="material-icons" title="Desligar membro">
+                power_settings_new
+            </i>
           </md-button>
         </div>
       </md-toolbar>

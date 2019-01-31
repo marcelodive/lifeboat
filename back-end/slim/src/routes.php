@@ -74,6 +74,22 @@ $app->post('/member/registry', function ($request, $response, $args) {
     $memberBean->hasDepartment = $member['hasDepartment'];
     $memberBean->hasRhema = $member['hasRhema'];
     $memberBean->boat_id = $member['boat_id'];
+    $memberBean->id = R::store($memberBean);
+
+    return $response->withJson($memberBean);
+});
+
+
+$app->post('/member/disconnect', function ($request, $response, $args) {
+    $bodyData = $request->getParsedBody();
+    $memberId = $bodyData['memberId'];
+    $memberBean = R::load('members', $memberId);
+
+    if (isset($memberId)) {
+        $this->logger->info("/member/delete/$memberId");
+    }
+
+    $memberBean->disconnected = true;
 
     return $response->withJson(R::store($memberBean));
 });

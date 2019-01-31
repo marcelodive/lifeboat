@@ -12,7 +12,7 @@
         </h2>
     </md-toolbar>
     <div>
-        <div ng-repeat="member in members | orderBy:'name'">            
+        <div ng-repeat="member in members | orderBy:'name' | filter: {disconnected : '!' + 1}">            
             <md-whiteframe style="padding: 2%;"
                 class="md-whiteframe-1dp" 
                 layout="row" 

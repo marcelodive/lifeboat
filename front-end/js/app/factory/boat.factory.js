@@ -30,6 +30,17 @@ angular.module('lifeboat')
         data: encodedMember,
         headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
       });
+    },
+
+    disconnectMember: (memberId) => {
+      const encodedMemberId = utilsFactory.JSON_to_URLEncoded({memberId});
+
+      return $http({
+        url: API.url + `member/disconnect`,
+        method: 'POST',
+        data: encodedMemberId,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+      });
     }
   };
 });
