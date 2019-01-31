@@ -1,4 +1,4 @@
 angular.module('lifeboat')
 .constant('API', {
-    url: 'http://localhost:8080/'
+    url: 'https://horrible-gecko-23.localtunnel.me/'
 });

@@ -2,7 +2,7 @@
     src="./../img/logo_botes.png" 
     alt="Logo Verbo nos Lares"/>
 <br>
-<div>
+<div ng-if="boats">
     <md-autocomplete
         md-selected-item="selectedItem"
         md-search-text-change="searchTextChange(searchText)"
@@ -21,4 +21,7 @@
         Nenhum bote/capitão encontrado.
     </md-not-found>
     </md-autocomplete>
+</div>
+<div ng-if="!boats">
+    Carregando...
 </div>
