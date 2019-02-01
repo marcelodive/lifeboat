@@ -8,7 +8,8 @@ angular.module('lifeboat')
     $scope.selectedDate = $scope.selectedDate.toISOString().substring(0,10);
     $scope.members = [];
     $scope.ministration = '';
-    
+    $scope.ministrationState = '';
+
     boatFactory.getMembers($scope.boat.id, $scope.selectedDate).then((response) => {
       $scope.members = Object.values(response.data);
       $scope.members.forEach((member) => {
@@ -36,6 +37,7 @@ angular.module('lifeboat')
         const newMember = response.data;
         if (newMember.id != member.id) {
           $scope.members.push(newMember);
+          window.alert(`Membro registrado com sucesso!`)
         } else {
           member = newMember;
         }    

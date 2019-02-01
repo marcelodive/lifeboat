@@ -4,8 +4,6 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use \RedBeanPHP\R as R;
 
-// require_once('./controller/member.controller.php');
-
 // boats
 $app->get('/boats', function ($request, $response, $args) {
     $this->logger->info("/boats");

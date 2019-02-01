@@ -2,7 +2,7 @@
     src="./../img/logo_botes.png" 
     alt="Logo Verbo nos Lares"/>
 <br>
-<div ng-if="boats">
+<div ng-show="boats">
     <md-autocomplete
         md-selected-item="selectedItem"
         md-search-text-change="searchTextChange(searchText)"
@@ -22,6 +22,6 @@
     </md-not-found>
     </md-autocomplete>
 </div>
-<div ng-if="!boats">
+<div ng-show="!boats">
     Carregando...
 </div>

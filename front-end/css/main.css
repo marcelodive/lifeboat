@@ -97,7 +97,14 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
+   .selected-date-picker {
+        padding-top: 20%; 
+        padding-bottom: 20%;
+    }
 
+    .date-picker {
+        
+    }
 
 
 
