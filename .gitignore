@@ -37,3 +37,7 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+#Custom
+/front-end/js/app/constant/index.contants.js
+/back-end/slim/src/dependencies.php

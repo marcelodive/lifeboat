@@ -40,8 +40,10 @@
             </md-button>
         </h2>
     </md-toolbar>
+    <span ng-show="loadingMembers && selectedDate">
+        <br>Carregando...<br>
+    </span>
     <div>
-        <p ng-show="!members.length">Carregando...</p>
         <div ng-repeat="member in members | orderBy:'name' | filter: {disconnected : '!' + 1}">            
             <md-whiteframe style="padding: 2%;"
                 class="md-whiteframe-1dp" 

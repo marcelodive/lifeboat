@@ -4,15 +4,18 @@ angular.module('lifeboat')
 
   $scope.onDateSelect = () => {
     cleanScopeVariables();
+    $scope.loadingMembers = true;
 
     $scope.selectedDate = $scope.selectedDate.toISOString().substring(0,10);
 
-    boatFactory.getMembers($scope.boat.id, $scope.selectedDate).then((response) => {
+    boatFactory.getMembers($scope.boat.id, $scope.selectedDate).then((response) => {      
       $scope.members = Object.values(response.data);
       $scope.members.forEach((member) => {
         member.is_present = (member.is_present == 'true');        
       });
+      $scope.loadingMembers = false;
     });
+
     boatFactory.getMinistration($scope.boat.id, $scope.selectedDate).then((response) => {
       $scope.ministration = (response.data) ? response.data.ministration: null;      
     });    
@@ -95,7 +98,6 @@ angular.module('lifeboat')
   function cleanScopeVariables () {
     $scope.ministrationState = null;
     $scope.ministration = null;
-    $scope.checked = [];
     $scope.members = [];
   }
   
