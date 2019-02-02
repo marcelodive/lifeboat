@@ -1,14 +1,11 @@
 angular.module('lifeboat')
 .controller('BoatController', function BoatController($scope, boatFactory, $mdDialog, $window) {
   const localStorage = window.localStorage;
-  $scope.ministrationState = '';
-  $scope.checked = [];
 
   $scope.onDateSelect = () => {
+    cleanScopeVariables();
+
     $scope.selectedDate = $scope.selectedDate.toISOString().substring(0,10);
-    $scope.members = [];
-    $scope.ministration = '';
-    $scope.ministrationState = '';
 
     boatFactory.getMembers($scope.boat.id, $scope.selectedDate).then((response) => {
       $scope.members = Object.values(response.data);
@@ -17,7 +14,7 @@ angular.module('lifeboat')
       });
     });
     boatFactory.getMinistration($scope.boat.id, $scope.selectedDate).then((response) => {
-      $scope.ministration = (response.data) ? response.data.ministration: '';      
+      $scope.ministration = (response.data) ? response.data.ministration: null;      
     });    
   }
 
@@ -68,7 +65,7 @@ angular.module('lifeboat')
   }
 
   $scope.saveMinistration = (ministration) => {
-    if (ministration) {
+    if (ministration != null) {
       $scope.ministrationState = "Salvando ministração...";
       boatFactory.saveMinistration(ministration, $scope.boat.id, $scope.selectedDate).then((response) => {
         $scope.ministrationState = "Ministração salva!";
@@ -94,6 +91,13 @@ angular.module('lifeboat')
       fullscreen: false // Only for -xs, -sm breakpoints.
     });
   };
+
+  function cleanScopeVariables () {
+    $scope.ministrationState = null;
+    $scope.ministration = null;
+    $scope.checked = [];
+    $scope.members = [];
+  }
   
   (function init () {
     $scope.boat = JSON.parse(localStorage.getItem('boat'));

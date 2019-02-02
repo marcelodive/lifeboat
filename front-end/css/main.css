@@ -102,8 +102,9 @@ textarea {
         padding-bottom: 20%;
     }
 
-    .date-picker {
-        
+    .back-bottom {
+        position: fixed !important;
+        bottom: 10px;
     }
 
 

@@ -36,11 +36,12 @@
         <h2 class="md-toolbar-tools" layout="row" layout-align="space-between center">
             <span>Presença</span>
             <md-button ng-show="selectedDate" ng-click="editMember()" class="md-raised">
-                Adicionar novo membro
+                Adicionar membro
             </md-button>
         </h2>
     </md-toolbar>
     <div>
+        <p ng-show="!members.length">Carregando...</p>
         <div ng-repeat="member in members | orderBy:'name' | filter: {disconnected : '!' + 1}">            
             <md-whiteframe style="padding: 2%;"
                 class="md-whiteframe-1dp" 
@@ -59,7 +60,7 @@
                     {{ member.name }}
                 </span>
                 <span ng-click="editMember(member)" style="cursor: pointer;">
-                    <i class="material-icons">more_vert</i>
+                    <i class="material-icons">settings</i>
                 </span>
             </md-whiteframe>
         </div>
@@ -88,7 +89,7 @@
                     <span ng-show="ministrationState == 'Ministração salva!'">
                         {{ ministrationState }}
                     </span>
-                    <span ng-show="ministrationState == ''" >
+                    <span ng-show="ministrationState == null" >
                         "Descreva como foi a ministração e o(s) versículo(s) chave"
                     </span>
                 </label>
@@ -102,8 +103,11 @@
     </div>
 </div>
 <br>
-<md-button hide-gt-xs class="md-raised" ng-click="backToSelectBoat()">
-    <span>    
+<md-button hide-gt-xs 
+    class="md-raised" 
+    ng-class="!selectedDate ? 'back-bottom' : ''"
+    ng-click="backToSelectBoat()">
+    <span layout="row" layout-align="space-between center">    
         <i class="material-icons">
             keyboard_backspace
         </i>
