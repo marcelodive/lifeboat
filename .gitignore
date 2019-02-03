@@ -40,4 +40,4 @@ Thumbs.db
 
 #Custom
 /front-end/js/app/constant/index.contants.js
-/back-end/slim/src/dependencies.php
+/back-end/src/dependencies.php

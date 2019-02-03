@@ -1,12 +1,20 @@
 angular.module('lifeboat')
-.controller('BoatController', function BoatController($scope, boatFactory, $mdDialog, $window) {
+.controller('BoatController', function BoatController(
+  $scope, 
+  boatFactory, 
+  $mdDialog, 
+  $window,
+  utilsFactory
+) {
   const localStorage = window.localStorage;
+
+  $scope.isDisconnectingMember = false;
 
   $scope.onDateSelect = () => {
     cleanScopeVariables();
     $scope.loadingMembers = true;
 
-    $scope.selectedDate = $scope.selectedDate.toISOString().substring(0,10);
+    $scope.selectedDate = utilsFactory.sanitizeDateForDB($scope.selectedDate);
 
     boatFactory.getMembers($scope.boat.id, $scope.selectedDate).then((response) => {      
       $scope.members = Object.values(response.data);
@@ -33,14 +41,16 @@ angular.module('lifeboat')
   $scope.registryMember = (member) => {
     if (member) {
       member.boat_id = $scope.boat.id;
+      member.birthday = utilsFactory.sanitizeDateForDB(member.birthday);
       boatFactory.registryMember(member).then((response) => {
         const newMember = response.data;
         if (newMember.id != member.id) {
           $scope.members.push(newMember);
-          window.alert(`Membro registrado com sucesso!`)
+          member = newMember;
+          utilsFactory.showToaster(`Membro registrado com sucesso!`);
         } else {
           member = newMember;
-        }    
+        }
         $mdDialog.hide();     
       });
     }
@@ -56,8 +66,9 @@ angular.module('lifeboat')
       const message = `Você deseja desligar "${selectedMember.name}" de seu bote?`;
       const disconnectMember = window.confirm(message);
       if (disconnectMember) {
-        boatFactory.disconnectMember(selectedMember.id).then((response) => {
-          window.alert(`O membro "${selectedMember.name}" foi desligado`);
+        boatFactory.disconnectMember(selectedMember.id, selectedMember.justification)
+        .then(() => {
+          utilsFactory.showToaster(`O membro "${selectedMember.name}" foi desligado`);
           selectedMember.disconnected = 1;
           $mdDialog.hide();
         });
@@ -77,12 +88,15 @@ angular.module('lifeboat')
   }
 
   $scope.hideDialog = () => {
+    $scope.isDisconnectingMember = false;
     $mdDialog.hide();
   };
 
   $scope.backToSelectBoat = () => {
     $window.location.href = '/';
   }
+
+  $scope.parseInt = parseInt;
 
   function showEditionDialog () {
     $mdDialog.show({

@@ -123,6 +123,8 @@ $app->post('/member/registry', function ($request, $response, $args) {
 $app->post('/member/disconnect', function ($request, $response, $args) {
     $bodyData = $request->getParsedBody();
     $memberId = $bodyData['memberId'];
+    $justification = $bodyData['justification'];
+
     $memberBean = R::load('members', $memberId);
 
     if (isset($memberId)) {
@@ -130,6 +132,7 @@ $app->post('/member/disconnect', function ($request, $response, $args) {
     }
 
     $memberBean->disconnected = true;
+    $memberBean->justification = $justification;
 
     return $response->withJson(R::store($memberBean));
 });

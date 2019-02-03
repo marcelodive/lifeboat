@@ -32,8 +32,8 @@ angular.module('lifeboat')
       });
     },
 
-    disconnectMember: (memberId) => {
-      const encodedMemberId = utilsFactory.JSON_to_URLEncoded({memberId});
+    disconnectMember: (memberId, justification = '') => {
+      const encodedMemberId = utilsFactory.JSON_to_URLEncoded({memberId, justification});
 
       return $http({
         url: API.url + `member/disconnect`,

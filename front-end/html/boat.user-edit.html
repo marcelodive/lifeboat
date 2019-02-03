@@ -7,7 +7,7 @@
           <span flex></span>
           <md-button class="md-icon-button" 
             ng-show="selectedMember.id"
-            ng-click="disconnectMember(selectedMember)">
+            ng-click="isDisconnectingMember = true">
             <i class="material-icons" title="Desligar membro">
                 delete
             </i>
@@ -15,7 +15,10 @@
         </div>
       </md-toolbar>
       <md-dialog-content>
-        <div class="md-dialog-content" layout="column" layout-align="center start">
+        <div ng-show="!isDisconnectingMember" 
+            class="md-dialog-content" 
+            layout="column" 
+            layout-align="center start">
             <md-input-container class="">
                 <label>Nome</label>
                 <input ng-model="selectedMember.name">
@@ -30,27 +33,41 @@
             </md-input-container>
             <md-input-container class="">           
                 <md-switch class="md-primary" 
-                    ng-model="selectedMember.isMember">
+                    ng-true-value="'true'" ng-false-value="'false'"
+                    ng-model="selectedMember.is_member">
                     Membro da igreja?
                 </md-switch>
             </md-input-container>
             <md-input-container class="">           
                 <md-switch class="md-primary" 
-                    ng-model="selectedMember.isDiscipleship">
+                    ng-true-value="'true'" ng-false-value="'false'"
+                    ng-model="selectedMember.is_discipleship">
                     Fez discipulado?
                 </md-switch>
             </md-input-container>
             <md-input-container class="">           
                 <md-switch class="md-primary" 
-                    ng-model="selectedMember.hasDepartment">
+                    ng-true-value="'true'" ng-false-value="'false'"
+                    ng-model="selectedMember.has_department">
                     Está em algum departamento?
                 </md-switch>
             </md-input-container>
             <md-input-container class="">           
                 <md-switch class="md-primary" 
-                    ng-model="selectedMember.hasRhema">
+                    ng-true-value="'true'" ng-false-value="'false'"
+                    ng-model="selectedMember.has_rhema">
                     Fez Rhema?
                 </md-switch>
+            </md-input-container>
+        </div>
+
+        <div ng-show="isDisconnectingMember"
+            class="md-dialog-content" 
+            layout="column" 
+            layout-align="center start">
+            <md-input-container class="">
+                <label>Justificativa:</label>
+                <textarea ng-model="selectedMember.justification"></textarea>
             </md-input-container>
         </div>
       </md-dialog-content>
@@ -61,8 +78,14 @@
             </md-button>
             <span flex></span>
             <md-button ng-disabled="!selectedMember.name" 
+                ng-show="!isDisconnectingMember"
                 ng-click="registryMember(selectedMember)">
                 Registrar
+            </md-button>
+            <md-button ng-disabled="!selectedMember.name" 
+                ng-show="isDisconnectingMember"
+                ng-click="disconnectMember(selectedMember)">
+                Desligar
             </md-button>
       </md-dialog-actions>
     </form>

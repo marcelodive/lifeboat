@@ -1,5 +1,5 @@
 angular.module('lifeboat')
-.factory('utilsFactory', function() {
+.factory('utilsFactory', function($mdToast) {
 
   function JSON_to_URLEncoded (element,key,list) {
     var list = list || [];
@@ -11,8 +11,24 @@ angular.module('lifeboat')
     }
     return list.join('&');
   }
+
+  function showToaster (message) {
+    const toast = $mdToast.simple()
+      .textContent(message)
+      .hideDelay(3000);
+
+    $mdToast.show(toast);
+  }
+
+  function sanitizeDateForDB (date) {
+    return (typeof date === 'object') 
+      ? date.toISOString().substring(0,10) 
+      : date;
+  }
   
   return {
-    JSON_to_URLEncoded: JSON_to_URLEncoded
+    JSON_to_URLEncoded: JSON_to_URLEncoded,
+    showToaster: showToaster,
+    sanitizeDateForDB: sanitizeDateForDB
   };
 });
