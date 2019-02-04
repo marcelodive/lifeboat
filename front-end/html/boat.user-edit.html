@@ -29,7 +29,9 @@
             </md-input-container>
             <md-input-container class="">
                 <label>Data de nascimento</label>
-                <md-datepicker ng-model="selectedMember.birthday"></md-datepicker>
+                <md-datepicker md-current-view="year"
+                    ng-model="selectedMember.birthday">
+                </md-datepicker>
             </md-input-container>
             <md-input-container class="">           
                 <md-switch class="md-primary" 
@@ -85,7 +87,7 @@
             <md-button ng-disabled="!selectedMember.name" 
                 ng-show="isDisconnectingMember"
                 ng-click="disconnectMember(selectedMember)">
-                Desligar
+                Remover
             </md-button>
       </md-dialog-actions>
     </form>

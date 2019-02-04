@@ -10,13 +10,15 @@ angular.module('lifeboat')
 
   $scope.isDisconnectingMember = false;
 
+  $scope.$watch(() => $scope.selectedDate, () => $scope.onDateSelect());
+
   $scope.onDateSelect = () => {
     cleanScopeVariables();
     $scope.loadingMembers = true;
 
-    $scope.selectedDate = utilsFactory.sanitizeDateForDB($scope.selectedDate);
+    $scope.dateForDB = utilsFactory.sanitizeDateForDB($scope.selectedDate);    
 
-    boatFactory.getMembers($scope.boat.id, $scope.selectedDate).then((response) => {      
+    boatFactory.getMembers($scope.boat.id, $scope.dateForDB).then((response) => {      
       $scope.members = Object.values(response.data);
       $scope.members.forEach((member) => {
         member.is_present = (member.is_present == 'true');        
@@ -24,14 +26,14 @@ angular.module('lifeboat')
       $scope.loadingMembers = false;
     });
 
-    boatFactory.getMinistration($scope.boat.id, $scope.selectedDate).then((response) => {
+    boatFactory.getMinistration($scope.boat.id, $scope.dateForDB).then((response) => {
       $scope.ministration = (response.data) ? response.data.ministration: null;      
     });    
   }
 
   $scope.setPresenceForMember = (memberId, isPresent) => {
     if(isPresent !== undefined){
-      boatFactory.setPresenceForMember(memberId, $scope.boat.id, $scope.selectedDate, isPresent)
+      boatFactory.setPresenceForMember(memberId, $scope.boat.id, $scope.dateForDB, isPresent)
         .then((response) => {
           console.log(response);
         });
@@ -81,7 +83,8 @@ angular.module('lifeboat')
   $scope.saveMinistration = (ministration) => {
     if (ministration != null) {
       $scope.ministrationState = "Salvando ministração...";
-      boatFactory.saveMinistration(ministration, $scope.boat.id, $scope.selectedDate).then((response) => {
+      boatFactory.saveMinistration(ministration, $scope.boat.id, $scope.dateForDB)
+      .then(() => {
         $scope.ministrationState = "Ministração salva!";
       })
     }

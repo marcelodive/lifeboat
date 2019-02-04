@@ -109,12 +109,13 @@ $app->post('/member/registry', function ($request, $response, $args) {
     $memberBean->name = $member['name'];
     $memberBean->phone = $member['phone'];
     $memberBean->birthday = $member['birthday'];
-    $memberBean->isMember = $member['isMember'];
-    $memberBean->isDiscipleship = $member['isDiscipleship'];
-    $memberBean->hasDepartment = $member['hasDepartment'];
-    $memberBean->hasRhema = $member['hasRhema'];
+    $memberBean->isMember = $member['is_member'];
+    $memberBean->isDiscipleship = $member['is_discipleship'];
+    $memberBean->hasDepartment = $member['has_department'];
+    $memberBean->hasRhema = $member['has_rhema'];
     $memberBean->boat_id = $member['boat_id'];
     $memberBean->id = R::store($memberBean);
+    $memberBean->lastEdit = date('Y-m-d', time());
 
     return $response->withJson($memberBean);
 });
