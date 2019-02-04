@@ -98,8 +98,7 @@ textarea {
    ========================================================================== */
 
    .selected-date-picker {
-        padding-top: 20%; 
-        padding-bottom: 20%;
+        padding-top: 20px; 
     }
 
     .back-bottom {
