@@ -45,7 +45,7 @@ $app->post('/boat/ministration', function ($request, $response, $args) {
     $bodyData = $request->getParsedBody();
     $boatId = $bodyData['boatId'];
     $selectedDate = $bodyData['selectedDate'];
-    $ministration = $bodyData['ministration'];    
+    $ministration = $bodyData['ministration'] ?? '';    
 
     $this->logger->info("/boat/$boatId/ministration/$selectedDate");
 
@@ -107,15 +107,15 @@ $app->post('/member/registry', function ($request, $response, $args) {
     }
 
     $memberBean->name = $member['name'];
-    $memberBean->phone = $member['phone'];
-    $memberBean->birthday = $member['birthday'];
-    $memberBean->isMember = $member['is_member'];
-    $memberBean->isDiscipleship = $member['is_discipleship'];
-    $memberBean->hasDepartment = $member['has_department'];
-    $memberBean->hasRhema = $member['has_rhema'];
+    $memberBean->phone = $member['phone'] ?? '';
+    $memberBean->birthday = $member['birthdayToDB'] ?? '';
+    $memberBean->isMember = $member['is_member'] ?? false;
+    $memberBean->isDiscipleship = $member['is_discipleship'] ?? false;
+    $memberBean->hasDepartment = $member['has_department'] ?? false;
+    $memberBean->hasRhema = $member['has_rhema'] ?? false;
     $memberBean->boat_id = $member['boat_id'];
-    $memberBean->id = R::store($memberBean);
     $memberBean->lastEdit = date('Y-m-d', time());
+    $memberBean->id = R::store($memberBean);
 
     return $response->withJson($memberBean);
 });
@@ -123,8 +123,9 @@ $app->post('/member/registry', function ($request, $response, $args) {
 
 $app->post('/member/disconnect', function ($request, $response, $args) {
     $bodyData = $request->getParsedBody();
+
     $memberId = $bodyData['memberId'];
-    $justification = $bodyData['justification'];
+    $justification = $bodyData['justification'] ?? '';
 
     $memberBean = R::load('members', $memberId);
 
