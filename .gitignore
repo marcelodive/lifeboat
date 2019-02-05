@@ -39,5 +39,5 @@ testem.log
 Thumbs.db
 
 #Custom
-/front-end/js/app/constant/index.contants.js
+/front-end/js/app/constant/index.constants.js
 /back-end/src/dependencies.php

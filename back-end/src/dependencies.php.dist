@@ -3,7 +3,7 @@
 
 use RedBeanPHP\R as R;
 
-R::setup( 'mysql:host=localhost;dbname=id8630737_verbo_nos_lares_db', 'root', 'jkmpm_31');
+R::setup( 'mysql:host=localhost;dbname=RB_database', 'root', 'root');
 
 $container = $app->getContainer();
 
