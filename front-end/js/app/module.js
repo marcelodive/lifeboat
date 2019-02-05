@@ -15,3 +15,6 @@ angular.module('lifeboat',[
         return m.isValid() ? m.toDate() : new Date(NaN);
     };
 });
+// .config(['$compileProvider', function ($compileProvider) {
+//     $compileProvider.debugInfoEnabled(false);
+// }]);
