@@ -18,7 +18,7 @@ $app->get('/boat/{id}/members/{selectedDate}', function ($request, $response, $a
     $boatMembers = R::find('members', " boat_id = $boatId ");
 
     foreach ($boatMembers as $member) {
-        $presence  = R::findOne( 'presence', 
+        $presence  = R::findOne( 'presences', 
             ' member_id = ? AND boat_id = ? AND date = ?', 
             [$member['id'], $boatId, $selectedDate] 
         );
@@ -77,13 +77,13 @@ $app->post('/member/presence', function ($request, $response, $args) {
 
     $this->logger->info("/member/presence/$memberId/$boatId/$selectedDate/$isPresent");
 
-    $presence  = R::findOne('presence', 
+    $presence  = R::findOne('presences', 
         ' member_id = ? AND boat_id = ? AND date = ?', 
         [$memberId, $boatId, $selectedDate] 
     );
 
     if (empty($presence)){
-        $presence = R::dispense('presence');
+        $presence = R::dispense('presences');
         $presence['member_id'] = $memberId;
         $presence['boat_id'] = $boatId;
         $presence['date'] = $selectedDate;
@@ -114,7 +114,7 @@ $app->post('/member/registry', function ($request, $response, $args) {
     $memberBean->hasDepartment = $member['has_department'] ?? false;
     $memberBean->hasRhema = $member['has_rhema'] ?? false;
     $memberBean->boat_id = $member['boat_id'];
-    $memberBean->lastEdit = date('Y-m-d', time());
+    $memberBean->lastEdit = date('Y-m-d H:i:s');
     $memberBean->id = R::store($memberBean);
 
     return $response->withJson($memberBean);

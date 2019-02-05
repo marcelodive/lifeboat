@@ -34,17 +34,14 @@ angular.module('lifeboat')
 
   $scope.setPresenceForMember = (memberId, isPresent) => {
     if(isPresent !== undefined){
-      boatFactory.setPresenceForMember(memberId, $scope.boat.id, $scope.dateForDB, isPresent)
-        .then((response) => {
-          console.log(response);
-        });
+      boatFactory.setPresenceForMember(memberId, $scope.boat.id, $scope.dateForDB, isPresent);
     }
   }
 
   $scope.registryMember = (member) => {
     if (member) {
       member.boat_id = $scope.boat.id;
-      member.birthdaytoBD = utilsFactory.sanitizeDateForDB(member.birthday);
+      member.birthdayToDB = utilsFactory.sanitizeDateForDB(member.birthday);
       boatFactory.registryMember(member).then((response) => {
         const newMember = response.data;
         if (member.id == null) {
@@ -60,7 +57,7 @@ angular.module('lifeboat')
   }
 
   $scope.editMember = (member) => {
-    $scope.selectedMember = member? member : null;
+    $scope.selectedMember = member ? member : null;
     showEditionDialog();
   }
 
