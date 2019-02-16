@@ -35,13 +35,21 @@
     <md-toolbar class="md-theme-light">
         <h2 class="md-toolbar-tools" layout="row" layout-align="space-between center">
             <span>Presença</span>
-            <md-button ng-show="selectedDate" ng-click="editMember()" class="md-raised">
+            <md-button 
+                ng-show="selectedDate" 
+                ng-click="editMember()" 
+                class="md-raised"
+                ng-class="(members.length === 0) ? 'md-warn' : ''">
                 Adicionar membro
             </md-button>
         </h2>
     </md-toolbar>
     <span ng-show="loadingMembers && selectedDate">
         <br>Carregando...<br>
+    </span>
+    <span ng-show="members.length === 0">
+        <br>Não há membros no seu bote, por favor, adicione-os clicando no botão
+        "ADICIONAR MEMBRO" à direita.<br>
     </span>
     <div>
         <div ng-repeat="member in members | orderBy:'name' | filter: {disconnected : '!' + 1}">            
@@ -84,11 +92,12 @@
                     <span layout="row" ng-show="ministrationState == 'Salvando ministração...'" >
                         {{ ministrationState }} 
                         <md-progress-circular                            
-                            md-diameter="15px"
+                            md-diameter="20px"
                             md-mode="indeterminate">
                         </md-progress-circular>
                     </span>
-                    <span ng-show="ministrationState == 'Ministração salva!'">
+                    <span style="color: green";
+                        ng-show="ministrationState == 'Ministração salva!'">
                         {{ ministrationState }}
                     </span>
                     <span ng-show="ministrationState == null" >
@@ -103,6 +112,21 @@
             </md-input-container>
         </md-whiteframe>
     </div>
+    <br>
+
+    <!-- Imagem -->
+    <div>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 class="md-flex">Imagem do Encontro</h2>
+            </div>
+        </md-toolbar>
+        <md-whiteframe style="padding: 2%;"
+            class="md-whiteframe-1dp" 
+            layout="row">
+        </md-whiteframe>
+    </div>
+
 </div>
 <br>
 <md-button hide-gt-xs 

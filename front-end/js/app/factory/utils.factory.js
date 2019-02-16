@@ -20,8 +20,8 @@ angular.module('lifeboat')
     $mdToast.show(toast);
   }
 
-  function sanitizeDateForDB (date) {
-    return (typeof date === 'object') 
+  function sanitizeDateForDB (date = null) {
+    return ((typeof date === 'object') && (date !== null)) 
       ? date.toISOString().substring(0,10) 
       : date;
   }

@@ -8,7 +8,7 @@
         md-search-text-change="searchTextChange(searchText)"
         md-search-text="searchText"
         md-selected-item-change="selectedItemChange(boat)"
-        md-items="boat in querySearch(searchText)"
+        md-items="boat in querySearch(searchText) | orderBy:'name'"
         md-item-text="boat.name"
         md-min-length="0"
         md-require-match="true"

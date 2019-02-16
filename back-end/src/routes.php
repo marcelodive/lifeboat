@@ -45,7 +45,7 @@ $app->post('/boat/ministration', function ($request, $response, $args) {
     $bodyData = $request->getParsedBody();
     $boatId = $bodyData['boatId'];
     $selectedDate = $bodyData['selectedDate'];
-    $ministration = $bodyData['ministration'] ?? '';    
+    $ministration = $bodyData['ministration'] ?? '';
 
     $this->logger->info("/boat/$boatId/ministration/$selectedDate");
 
@@ -107,8 +107,8 @@ $app->post('/member/registry', function ($request, $response, $args) {
     }
 
     $memberBean->name = $member['name'];
-    $memberBean->phone = $member['phone'] ?? '';
-    $memberBean->birthday = $member['birthdayToDB'] ?? '';
+    $memberBean->phone = $member['phone'];
+    $memberBean->birthday = $member['birthdayToDB'];
     $memberBean->isMember = $member['is_member'] ?? false;
     $memberBean->isDiscipleship = $member['is_discipleship'] ?? false;
     $memberBean->hasDepartment = $member['has_department'] ?? false;
@@ -125,7 +125,7 @@ $app->post('/member/disconnect', function ($request, $response, $args) {
     $bodyData = $request->getParsedBody();
 
     $memberId = $bodyData['memberId'];
-    $justification = $bodyData['justification'] ?? '';
+    $justification = $bodyData['justification'];
 
     $memberBean = R::load('members', $memberId);
 
