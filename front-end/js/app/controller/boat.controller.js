@@ -84,7 +84,7 @@ angular.module('lifeboat')
       boatFactory.saveMinistration(ministration, $scope.boat.id, $scope.dateForDB)
       .then(() => {
         $scope.ministrationState = "Ministração salva!";
-      })
+      });
     }
   }
 
@@ -122,4 +122,31 @@ angular.module('lifeboat')
       $window.location.href = '/';
     } 
   })();
+
+  window.onload = () => {
+    const fileElement = document.getElementById('files');
+    fileElement.addEventListener('change', handleFileSelect, false)
+  }
+
+  function handleFileSelect (event) {
+    const files = event.target.files;
+    const file = files[0];
+    const reader = new FileReader(); 
+       
+    reader.onload = (() => (e) => {
+      const innerImageHTML = `<img src="${e.target.result}" width="100%" />`;
+      const imageElement = document.getElementById('image');
+      imageElement.innerHTML = innerImageHTML;      
+      sendPhotoReunionInBase64ToServer(e.target.result);
+    })(file);
+      
+    reader.readAsDataURL(file);
+  }
+
+  function sendPhotoReunionInBase64ToServer (imageInBase64) {
+    boatFactory.saveReunionPhoto(imageInBase64, $scope.boat.id, $scope.dateForDB)
+    .then((response) => {
+      console.log("Imagem salva com sucesso");
+    });
+  }
 });

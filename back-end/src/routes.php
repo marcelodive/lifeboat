@@ -65,6 +65,30 @@ $app->post('/boat/ministration', function ($request, $response, $args) {
     return $response->withJson(R::store($ministrationBean));
 });
 
+$app->post('/boat/reunion-photo', function ($request, $response, $args) {
+    $bodyData = $request->getParsedBody();
+    $boatId = $bodyData['boatId'];
+    $selectedDate = $bodyData['selectedDate'];
+    $photoReunionBase64 = $bodyData['photoBase64'];
+
+    $this->logger->info("/boat/$boatId/reunion-photo/$selectedDate");    
+
+    $reunionPhotoBean  = R::findOne('photos', 
+        ' boat_id = ? AND date = ?', 
+        [$boatId, $selectedDate] 
+    );
+
+    if (empty($reunionPhotoBean)) {
+        $reunionPhotoBean = R::dispense('photos');
+        $reunionPhotoBean->date = $selectedDate;
+        $reunionPhotoBean->boat_id = $boatId;
+    }
+
+    $reunionPhotoBean->photo_b64 = $photoReunionBase64;
+
+    return $response->withJson(R::store($reunionPhotoBean));
+});
+
 
 
 // members

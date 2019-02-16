@@ -118,12 +118,15 @@
     <div>
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 class="md-flex">Imagem do Encontro</h2>
+                <h2 class="md-flex">Foto do Encontro</h2>
             </div>
         </md-toolbar>
         <md-whiteframe style="padding: 2%;"
             class="md-whiteframe-1dp" 
-            layout="row">
+            layout="column">
+            <input type="file" id="files" width="100%"/>
+            <br>
+            <output id="image"></output>
         </md-whiteframe>
     </div>
 

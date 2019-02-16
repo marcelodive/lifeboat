@@ -57,6 +57,18 @@ angular.module('lifeboat')
         data: encodedMinistration,
         headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
       });
+    },
+
+    saveReunionPhoto: (photoBase64, boatId, selectedDate) => {
+      const dataToSend = {photoBase64, boatId, selectedDate};
+      const encodedData = utilsFactory.JSON_to_URLEncoded(dataToSend);
+
+      return $http({
+        url: API.url + `boat/reunion-photo`,
+        method: 'POST',
+        data: encodedData,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+      });
     }
   };
 });
