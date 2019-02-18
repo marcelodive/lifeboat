@@ -29,73 +29,73 @@ $app->get('/boat/{id}/members/{selectedDate}', function ($request, $response, $a
     return $response->withJson($boatMembers);
 });
 
-$app->get('/boat/{id}/reunion/{selectedDate}', function ($request, $response, $args) {
+$app->get('/boat/{id}/meeting/{selectedDate}', function ($request, $response, $args) {
     $boatId = $args['id'];
     $selectedDate = $args['selectedDate'];
 
-    $this->logger->info("/boat/{id}/reunion/{selectedDate}");
-    $reunion = R::findOne('reunions',
+    $this->logger->info("/boat/{id}/meeting/{selectedDate}");
+    $meeting = R::findOne('meetings',
         ' boat_id = ? AND date = ?',
         [$boatId, $selectedDate]
     );
-    return $response->withJson($reunion);
+    return $response->withJson($meeting);
 });
 
-$app->post('/boat/reunion', function ($request, $response, $args) {
+$app->post('/boat/meeting', function ($request, $response, $args) {
     $bodyData = $request->getParsedBody();
     $boatId = $bodyData['boatId'];
     $selectedDate = $bodyData['selectedDate'];
-    $reunion = $bodyData['reunion'] ?? '';
+    $meeting = $bodyData['meeting'] ?? '';
 
-    $this->logger->info("/boat/$boatId/reunion/$selectedDate");
+    $this->logger->info("/boat/$boatId/meeting/$selectedDate");
 
-    $reunionBean  = R::findOne('reunions',
+    $meetingBean  = R::findOne('meetings',
         ' boat_id = ? AND date = ?',
         [$boatId, $selectedDate]
     );
 
-    if (empty($reunionBean)) {
-        $reunionBean = R::dispense('reunions');
-        $reunionBean->date = $selectedDate;
-        $reunionBean->boat_id = $boatId;
+    if (empty($meetingBean)) {
+        $meetingBean = R::dispense('meetings');
+        $meetingBean->date = $selectedDate;
+        $meetingBean->boat_id = $boatId;
     }
 
-    $reunionBean->reunion = $reunion;
+    $meetingBean->meeting = $meeting;
 
-    return $response->withJson(R::store($reunionBean));
+    return $response->withJson(R::store($meetingBean));
 });
 
-$app->post('/boat/reunion-photo', function ($request, $response, $args) {
+$app->post('/boat/meeting-photo', function ($request, $response, $args) {
     $bodyData = $request->getParsedBody();
     $boatId = $bodyData['boatId'];
     $selectedDate = $bodyData['selectedDate'];
-    $photoReunionBase64 = $bodyData['photoBase64'];
+    $photoMeetingBase64 = $bodyData['photoBase64'];
 
-    $this->logger->info("/boat/$boatId/reunion-photo/$selectedDate");
+    $this->logger->info("/boat/$boatId/meeting-photo/$selectedDate");
 
-    [$fileType, $base64HtmlData] = explode(';', $photoReunionBase64);
+    [$fileType, $base64HtmlData] = explode(';', $photoMeetingBase64);
     [,$fileExtension] = explode('/', $fileType);
     [,$encodedBase64] = explode(',', $base64HtmlData);
     $decodedBase64 = base64_decode($encodedBase64);
 
     $fileName = "${selectedDate}-${boatId}.${fileExtension}";
 
-    file_put_contents("../images/reunions/photos/${fileName}", $decodedBase64);
+    file_put_contents("../images/meetings/photos/${fileName}", $decodedBase64);
 
-    $reunionBean  = R::findOne('reunion',
+    $meetingBean  = R::findOne('meeting',
         ' boat_id = ? AND date = ?',
         [$boatId, $selectedDate]
     );
 
-    if (empty($reunionBean)) {
-        $reunionBean = R::dispense('reunion');
-        $reunionBean->date = $selectedDate;
-        $reunionBean->boat_id = $boatId;
+    if (empty($meetingBean)) {
+        $meetingBean = R::dispense('meeting');
+        $meetingBean->date = $selectedDate;
+        $meetingBean->boat_id = $boatId;
     }
 
-    $reunionBean->photo = $fileName;
+    $meetingBean->photo = $fileName;
 
-    return $response->withJson(R::store($reunionBean));
+    return $response->withJson(R::store($meetingBean));
 });
 
 
