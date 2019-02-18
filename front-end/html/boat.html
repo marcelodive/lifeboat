@@ -1,18 +1,18 @@
 <!-- Toolbar -->
 <md-toolbar>
-    <span layout="row" 
+    <span layout="row"
         layout-align="space-between center"
         layout-xs="column"
         layout-align-xs="center center">
         <md-button hide-xs class="md-raised" ng-click="backToSelectBoat()">
-            <span layout="row" layout-align="center center">    
+            <span layout="row" layout-align="center center">
                 <i class="material-icons">
                     keyboard_backspace
                 </i>
                 <span>Voltar</span>
             </span>
         </md-button>
-        <span style="text-align: center">                
+        <span style="text-align: center">
             <strong>{{ boat.name }}</strong>
         </span>
         <span></span>
@@ -20,14 +20,14 @@
 </md-toolbar>
 
 <!-- Selected date -->
-<span layout="column" layout-align="center center" 
+<span layout="column" layout-align="center center"
     ng-class="!selectedDate ? 'selected-date-picker': 'date-picker'">
     <strong ng-show="!selectedDate">Selecione o dia do encontro:</strong>
-    <md-datepicker ng-model="selectedDate" 
+    <md-datepicker ng-model="selectedDate"
         ng-change="onDateSelect()"
-        md-placeholder="01/01/2019" 
+        md-placeholder="01/01/2019"
         md-open-on-focus>
-    </md-datepicker>    
+    </md-datepicker>
 </span>
 
 <!-- Presence -->
@@ -35,9 +35,9 @@
     <md-toolbar class="md-theme-light">
         <h2 class="md-toolbar-tools" layout="row" layout-align="space-between center">
             <span>Presença</span>
-            <md-button 
-                ng-show="selectedDate" 
-                ng-click="editMember()" 
+            <md-button
+                ng-show="selectedDate"
+                ng-click="editMember()"
                 class="md-raised"
                 ng-class="(members.length === 0) ? 'md-warn' : ''">
                 Adicionar membro
@@ -52,20 +52,20 @@
         "ADICIONAR MEMBRO" à direita.<br>
     </span>
     <div>
-        <div ng-repeat="member in members | orderBy:'name' | filter: {disconnected : '!' + 1}">            
+        <div ng-repeat="member in members | orderBy:'name' | filter: {disconnected : '!' + 1}">
             <md-whiteframe style="padding: 2%;"
-                class="md-whiteframe-1dp" 
-                layout="row" 
+                class="md-whiteframe-1dp"
+                layout="row"
                 layout-align="space-between center">
                 <span layout layout-align="center center">
                     <md-checkbox style="margin-bottom: 0;"
-                        ng-model="member.is_present" 
+                        ng-model="member.is_present"
                         ng-change="setPresenceForMember(member.id, member.is_present)"
                         aria-label="Checkbox">
                     </md-checkbox>
                 </span>
-                <span style="width: 100%;" 
-                    title="{{member.name}}" 
+                <span style="width: 100%;"
+                    title="{{member.name}}"
                     alt="{{member.name}}">
                     {{ member.name }}
                 </span>
@@ -85,13 +85,13 @@
             </div>
         </md-toolbar>
         <md-whiteframe style="padding: 2%;"
-            class="md-whiteframe-1dp" 
+            class="md-whiteframe-1dp"
             layout="row">
             <md-input-container class="md-block" flex>
                 <label>
                     <span layout="row" ng-show="ministrationState == 'Salvando ministração...'" >
-                        {{ ministrationState }} 
-                        <md-progress-circular                            
+                        {{ ministrationState }}
+                        <md-progress-circular
                             md-diameter="20px"
                             md-mode="indeterminate">
                         </md-progress-circular>
@@ -104,7 +104,7 @@
                         "Descreva como foi a ministração e o(s) versículo(s) chave"
                     </span>
                 </label>
-                <textarea 
+                <textarea
                     ng-model="ministration"
                     ng-model-options="{ debounce: 1000 }"
                     ng-change="saveMinistration(ministration)">
@@ -114,7 +114,7 @@
     </div>
     <br>
 
-    <!-- Imagem -->
+    <!-- Image -->
     <div>
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -122,7 +122,7 @@
             </div>
         </md-toolbar>
         <md-whiteframe style="padding: 2%;"
-            class="md-whiteframe-1dp" 
+            class="md-whiteframe-1dp"
             layout="column">
             <input type="file" id="files" width="100%"/>
             <br>
@@ -132,11 +132,11 @@
 
 </div>
 <br>
-<md-button hide-gt-xs 
-    class="md-raised" 
+<md-button hide-gt-xs
+    class="md-raised"
     ng-class="!selectedDate ? 'back-bottom' : ''"
     ng-click="backToSelectBoat()">
-    <span layout="row" layout-align="space-between center">    
+    <span layout="row" layout-align="space-between center">
         <i class="material-icons">
             keyboard_backspace
         </i>

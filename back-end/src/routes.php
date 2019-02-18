@@ -18,51 +18,51 @@ $app->get('/boat/{id}/members/{selectedDate}', function ($request, $response, $a
     $boatMembers = R::find('members', " boat_id = $boatId ");
 
     foreach ($boatMembers as $member) {
-        $presence  = R::findOne( 'presences', 
-            ' member_id = ? AND boat_id = ? AND date = ?', 
-            [$member['id'], $boatId, $selectedDate] 
+        $presence  = R::findOne( 'presences',
+            ' member_id = ? AND boat_id = ? AND date = ?',
+            [$member['id'], $boatId, $selectedDate]
         );
-        
+
         $member->is_present = !empty($presence) ? $presence->is_present : false;
     }
-    
+
     return $response->withJson($boatMembers);
 });
 
-$app->get('/boat/{id}/ministration/{selectedDate}', function ($request, $response, $args) {
+$app->get('/boat/{id}/reunion/{selectedDate}', function ($request, $response, $args) {
     $boatId = $args['id'];
     $selectedDate = $args['selectedDate'];
 
-    $this->logger->info("/boat/{id}/ministration/{selectedDate}");
-    $ministration = R::findOne('ministrations',
+    $this->logger->info("/boat/{id}/reunion/{selectedDate}");
+    $reunion = R::findOne('reunions',
         ' boat_id = ? AND date = ?',
-        [$boatId, $selectedDate] 
+        [$boatId, $selectedDate]
     );
-    return $response->withJson($ministration);
+    return $response->withJson($reunion);
 });
 
-$app->post('/boat/ministration', function ($request, $response, $args) {
+$app->post('/boat/reunion', function ($request, $response, $args) {
     $bodyData = $request->getParsedBody();
     $boatId = $bodyData['boatId'];
     $selectedDate = $bodyData['selectedDate'];
-    $ministration = $bodyData['ministration'] ?? '';
+    $reunion = $bodyData['reunion'] ?? '';
 
-    $this->logger->info("/boat/$boatId/ministration/$selectedDate");
+    $this->logger->info("/boat/$boatId/reunion/$selectedDate");
 
-    $ministrationBean  = R::findOne('ministrations', 
-        ' boat_id = ? AND date = ?', 
-        [$boatId, $selectedDate] 
+    $reunionBean  = R::findOne('reunions',
+        ' boat_id = ? AND date = ?',
+        [$boatId, $selectedDate]
     );
 
-    if (empty($ministrationBean)) {
-        $ministrationBean = R::dispense('ministrations');
-        $ministrationBean->date = $selectedDate;
-        $ministrationBean->boat_id = $boatId;
+    if (empty($reunionBean)) {
+        $reunionBean = R::dispense('reunions');
+        $reunionBean->date = $selectedDate;
+        $reunionBean->boat_id = $boatId;
     }
 
-    $ministrationBean->ministration = $ministration;
+    $reunionBean->reunion = $reunion;
 
-    return $response->withJson(R::store($ministrationBean));
+    return $response->withJson(R::store($reunionBean));
 });
 
 $app->post('/boat/reunion-photo', function ($request, $response, $args) {
@@ -71,15 +71,15 @@ $app->post('/boat/reunion-photo', function ($request, $response, $args) {
     $selectedDate = $bodyData['selectedDate'];
     $photoReunionBase64 = $bodyData['photoBase64'];
 
-    $this->logger->info("/boat/$boatId/reunion-photo/$selectedDate");    
+    $this->logger->info("/boat/$boatId/reunion-photo/$selectedDate");
 
-    $reunionPhotoBean  = R::findOne('photos', 
-        ' boat_id = ? AND date = ?', 
-        [$boatId, $selectedDate] 
+    $reunionPhotoBean  = R::findOne('reunion',
+        ' boat_id = ? AND date = ?',
+        [$boatId, $selectedDate]
     );
 
     if (empty($reunionPhotoBean)) {
-        $reunionPhotoBean = R::dispense('photos');
+        $reunionPhotoBean = R::dispense('reunion');
         $reunionPhotoBean->date = $selectedDate;
         $reunionPhotoBean->boat_id = $boatId;
     }
@@ -101,9 +101,9 @@ $app->post('/member/presence', function ($request, $response, $args) {
 
     $this->logger->info("/member/presence/$memberId/$boatId/$selectedDate/$isPresent");
 
-    $presence  = R::findOne('presences', 
-        ' member_id = ? AND boat_id = ? AND date = ?', 
-        [$memberId, $boatId, $selectedDate] 
+    $presence  = R::findOne('presences',
+        ' member_id = ? AND boat_id = ? AND date = ?',
+        [$memberId, $boatId, $selectedDate]
     );
 
     if (empty($presence)){
