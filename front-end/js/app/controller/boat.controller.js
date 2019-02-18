@@ -1,8 +1,8 @@
 angular.module('lifeboat')
 .controller('BoatController', function BoatController(
-  $scope, 
-  boatFactory, 
-  $mdDialog, 
+  $scope,
+  boatFactory,
+  $mdDialog,
   $window,
   utilsFactory,
   $timeout
@@ -17,19 +17,19 @@ angular.module('lifeboat')
     cleanScopeVariables();
     $scope.loadingMembers = true;
 
-    $scope.dateForDB = utilsFactory.sanitizeDateForDB($scope.selectedDate);    
+    $scope.dateForDB = utilsFactory.sanitizeDateForDB($scope.selectedDate);
 
-    boatFactory.getMembers($scope.boat.id, $scope.dateForDB).then((response) => {      
+    boatFactory.getMembers($scope.boat.id, $scope.dateForDB).then((response) => {
       $scope.members = Object.values(response.data);
       $scope.members.forEach((member) => {
-        member.is_present = (member.is_present == 'true');        
+        member.is_present = (member.is_present == 'true');
       });
       $scope.loadingMembers = false;
     });
 
-    boatFactory.getMinistration($scope.boat.id, $scope.dateForDB).then((response) => {
-      $scope.ministration = (response.data) ? response.data.ministration: null;      
-    });    
+    boatFactory.getMeeting($scope.boat.id, $scope.dateForDB).then((response) => {
+      $scope.ministration = (response.data) ? response.data.ministration : null;
+    });
   }
 
   $scope.setPresenceForMember = (memberId, isPresent) => {
@@ -51,7 +51,7 @@ angular.module('lifeboat')
         } else {
           member = newMember;
         }
-        $mdDialog.hide();     
+        $mdDialog.hide();
       });
     }
   }
@@ -115,12 +115,12 @@ angular.module('lifeboat')
     $scope.ministration = null;
     $scope.members = [];
   }
-  
+
   (function init () {
     $scope.boat = JSON.parse(localStorage.getItem('boat'));
     if (!$scope.boat) {
       $window.location.href = '/';
-    } 
+    }
   })();
 
   window.onload = () => {
@@ -131,15 +131,15 @@ angular.module('lifeboat')
   function handleFileSelect (event) {
     const files = event.target.files;
     const file = files[0];
-    const reader = new FileReader(); 
-       
+    const reader = new FileReader();
+
     reader.onload = (() => (e) => {
       const innerImageHTML = `<img src="${e.target.result}" width="100%" />`;
       const imageElement = document.getElementById('image');
-      imageElement.innerHTML = innerImageHTML;      
+      imageElement.innerHTML = innerImageHTML;
       sendPhotoReunionInBase64ToServer(e.target.result);
     })(file);
-      
+
     reader.readAsDataURL(file);
   }
 

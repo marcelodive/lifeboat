@@ -41,11 +41,11 @@ $app->get('/boat/{id}/meeting/{selectedDate}', function ($request, $response, $a
     return $response->withJson($meeting);
 });
 
-$app->post('/boat/meeting', function ($request, $response, $args) {
+$app->post('/boat/ministration', function ($request, $response, $args) {
     $bodyData = $request->getParsedBody();
     $boatId = $bodyData['boatId'];
     $selectedDate = $bodyData['selectedDate'];
-    $meeting = $bodyData['meeting'] ?? '';
+    $ministration = $bodyData['ministration'] ?? '';
 
     $this->logger->info("/boat/$boatId/meeting/$selectedDate");
 
@@ -60,7 +60,7 @@ $app->post('/boat/meeting', function ($request, $response, $args) {
         $meetingBean->boat_id = $boatId;
     }
 
-    $meetingBean->meeting = $meeting;
+    $meetingBean->ministration = $ministration;
 
     return $response->withJson(R::store($meetingBean));
 });

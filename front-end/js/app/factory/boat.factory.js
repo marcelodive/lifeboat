@@ -14,7 +14,7 @@ angular.module('lifeboat')
       const encodedPresence = utilsFactory.JSON_to_URLEncoded(presenceObject);
 
       return $http({
-        url: API.url + `member/presence`,                                                
+        url: API.url + `member/presence`,
         method: 'POST',
         data: encodedPresence,
         headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
@@ -43,8 +43,8 @@ angular.module('lifeboat')
       });
     },
 
-    getMinistration: (boatId, selectedDate) => {
-      return $http.get(API.url + `boat/${boatId}/ministration/${selectedDate}`);
+    getMeeting: (boatId, selectedDate) => {
+      return $http.get(API.url + `boat/${boatId}/meeting/${selectedDate}`);
     },
 
     saveMinistration: (ministration, boatId, selectedDate) => {
