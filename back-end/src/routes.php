@@ -73,20 +73,29 @@ $app->post('/boat/reunion-photo', function ($request, $response, $args) {
 
     $this->logger->info("/boat/$boatId/reunion-photo/$selectedDate");
 
-    $reunionPhotoBean  = R::findOne('reunion',
+    [$fileType, $base64HtmlData] = explode(';', $photoReunionBase64);
+    [,$fileExtension] = explode('/', $fileType);
+    [,$encodedBase64] = explode(',', $base64HtmlData);
+    $decodedBase64 = base64_decode($encodedBase64);
+
+    $fileName = "${selectedDate}-${boatId}.${fileExtension}";
+
+    file_put_contents("../images/reunions/photos/${fileName}", $decodedBase64);
+
+    $reunionBean  = R::findOne('reunion',
         ' boat_id = ? AND date = ?',
         [$boatId, $selectedDate]
     );
 
-    if (empty($reunionPhotoBean)) {
-        $reunionPhotoBean = R::dispense('reunion');
-        $reunionPhotoBean->date = $selectedDate;
-        $reunionPhotoBean->boat_id = $boatId;
+    if (empty($reunionBean)) {
+        $reunionBean = R::dispense('reunion');
+        $reunionBean->date = $selectedDate;
+        $reunionBean->boat_id = $boatId;
     }
 
-    $reunionPhotoBean->photo_b64 = $photoReunionBase64;
+    $reunionBean->photo = $fileName;
 
-    return $response->withJson(R::store($reunionPhotoBean));
+    return $response->withJson(R::store($reunionBean));
 });
 
 
