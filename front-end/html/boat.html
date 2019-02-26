@@ -126,7 +126,11 @@
             layout="column">
             <input type="file" id="files" width="100%"/>
             <br>
-            <output id="image"></output>
+            <output ng-show="reunionPhotoStatus != 'Selecione uma foto do encontro'"
+                id="image">
+            </output>
+            <br>
+            <strong>{{ reunionPhotoStatus }}</strong>
         </md-whiteframe>
     </div>
 

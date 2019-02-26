@@ -69,6 +69,10 @@ angular.module('lifeboat')
         data: encodedData,
         headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
       });
+    },
+
+    getReunionPhoto: (boatId, selectedDate) => {
+      return $http.get(API.url + `boat/${boatId}/reunion-photo/${selectedDate}`);
     }
   };
 });

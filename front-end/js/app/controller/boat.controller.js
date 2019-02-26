@@ -25,11 +25,24 @@ angular.module('lifeboat')
         member.is_present = (member.is_present == 'true');        
       });
       $scope.loadingMembers = false;
+
+      boatFactory.getMinistration($scope.boat.id, $scope.dateForDB).then((response) => {
+        $scope.ministration = (response.data) ? response.data.ministration: null; 
+
+        boatFactory.getReunionPhoto($scope.boat.id, $scope.dateForDB).then((response) => {
+          const reunionPhotoB64 = (response.data) ? response.data.photo_b64 : null;
+          $scope.reunionPhotoStatus = (reunionPhotoB64) 
+            ? 'Foto salva com sucesso!' 
+            : 'Selecione uma foto do encontro';
+          renderPhotoOnPage(reunionPhotoB64);
+        });
+
+      });    
+
     });
 
-    boatFactory.getMinistration($scope.boat.id, $scope.dateForDB).then((response) => {
-      $scope.ministration = (response.data) ? response.data.ministration: null;      
-    });    
+    const fileElement = document.getElementById('files');
+    fileElement.addEventListener('change', handleFileSelect, false)
   }
 
   $scope.setPresenceForMember = (memberId, isPresent) => {
@@ -111,6 +124,7 @@ angular.module('lifeboat')
   };
 
   function cleanScopeVariables () {
+    renderPhotoOnPage('');
     $scope.ministrationState = null;
     $scope.ministration = null;
     $scope.members = [];
@@ -123,30 +137,30 @@ angular.module('lifeboat')
     } 
   })();
 
-  window.onload = () => {
-    const fileElement = document.getElementById('files');
-    fileElement.addEventListener('change', handleFileSelect, false)
-  }
-
   function handleFileSelect (event) {
     const files = event.target.files;
     const file = files[0];
     const reader = new FileReader(); 
        
     reader.onload = (() => (e) => {
-      const innerImageHTML = `<img src="${e.target.result}" width="100%" />`;
-      const imageElement = document.getElementById('image');
-      imageElement.innerHTML = innerImageHTML;      
+      renderPhotoOnPage(e.target.result);
       sendPhotoReunionInBase64ToServer(e.target.result);
     })(file);
       
     reader.readAsDataURL(file);
   }
 
+  function renderPhotoOnPage (photo_b64) {
+    const innerImageHTML = `<img src="${photo_b64}" width="100%" />`;
+    const imageElement = document.getElementById('image');
+    imageElement.innerHTML = innerImageHTML;      
+  }
+
   function sendPhotoReunionInBase64ToServer (imageInBase64) {
     boatFactory.saveReunionPhoto(imageInBase64, $scope.boat.id, $scope.dateForDB)
     .then((response) => {
-      console.log("Imagem salva com sucesso");
+      $scope.reunionPhotoStatus = '';
+      alert("Imagem salva com sucesso");
     });
   }
 });

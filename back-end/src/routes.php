@@ -65,6 +65,18 @@ $app->post('/boat/ministration', function ($request, $response, $args) {
     return $response->withJson(R::store($ministrationBean));
 });
 
+$app->get('/boat/{id}/reunion-photo/{selectedDate}', function ($request, $response, $args) {
+    $boatId = $args['id'];
+    $selectedDate = $args['selectedDate'];
+
+    $this->logger->info("/boat/{id}/reunion-photo/{selectedDate}");
+    $reunionPhoto = R::findOne('photos',
+        ' boat_id = ? AND date = ?',
+        [$boatId, $selectedDate] 
+    );
+    return $response->withJson($reunionPhoto);
+});
+
 $app->post('/boat/reunion-photo', function ($request, $response, $args) {
     $bodyData = $request->getParsedBody();
     $boatId = $bodyData['boatId'];
@@ -125,8 +137,10 @@ $app->post('/member/registry', function ($request, $response, $args) {
 
     if (isset($member['id'])) {
         $memberBean->id = $member['id'];
+        $memberBean->createdAt = $member['created_at'];
         $this->logger->info("/member/registry/$member[id]");
     } else {
+        $memberBean->createdAt = date('Y-m-d H:i:s');
         $this->logger->info("/member/registry/");
     }
 
