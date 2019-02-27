@@ -11,34 +11,31 @@ angular.module('lifeboat')
 
   $scope.isDisconnectingMember = false;
 
-  // $scope.$watch(() => $scope.selectedDate, () => $scope.onDateSelect());
-
-  $scope.onDateSelect = () => {
+  $scope.onDateSelect = async () => {
     cleanScopeVariables();
+    $scope.dateForDB = utilsFactory.sanitizeDateForDB($scope.selectedDate); 
+
     $scope.loadingMembers = true;
+    $scope.loadingMinistration = true;
+    $scope.loadingPhotoReunion = true;
 
-    $scope.dateForDB = utilsFactory.sanitizeDateForDB($scope.selectedDate);    
-
-    boatFactory.getMembers($scope.boat.id, $scope.dateForDB).then((response) => {      
+    await boatFactory.getMembers($scope.boat.id, $scope.dateForDB).then((response) => {      
       $scope.members = Object.values(response.data);
       $scope.members.forEach((member) => {
         member.is_present = (member.is_present == 'true');        
       });
       $scope.loadingMembers = false;
-
-      boatFactory.getMinistration($scope.boat.id, $scope.dateForDB).then((response) => {
-        $scope.ministration = (response.data) ? response.data.ministration: null; 
-
-        boatFactory.getReunionPhoto($scope.boat.id, $scope.dateForDB).then((response) => {
-          const reunionPhotoB64 = (response.data) ? response.data.photo_b64 : null;
-          $scope.reunionPhotoStatus = (reunionPhotoB64) 
-            ? 'Foto salva com sucesso!' 
-            : 'Selecione uma foto do encontro';
-          renderPhotoOnPage(reunionPhotoB64);
-        });
-
-      });    
-
+    });
+    await boatFactory.getMinistration($scope.boat.id, $scope.dateForDB).then((response) => {
+      $scope.ministration = (response.data) ? response.data.ministration: null; 
+      $scope.loadingMinistration = false;
+    });  
+    await boatFactory.getReunionPhoto($scope.boat.id, $scope.dateForDB).then((response) => {
+      const reunionPhotoB64 = (response.data) ? response.data.photo_b64 : null;
+      $scope.reunionPhotoStatus = (reunionPhotoB64) 
+        ? 'Foto salva com sucesso!' 
+        : 'Selecione uma foto do encontro';
+      renderPhotoOnPage(reunionPhotoB64);
     });
 
     const fileElement = document.getElementById('files');
@@ -129,13 +126,6 @@ angular.module('lifeboat')
     $scope.ministration = null;
     $scope.members = [];
   }
-  
-  (function init () {
-    $scope.boat = JSON.parse(localStorage.getItem('boat'));
-    if (!$scope.boat) {
-      $window.location.href = '/';
-    } 
-  })();
 
   function handleFileSelect (event) {
     const files = event.target.files;
@@ -153,14 +143,25 @@ angular.module('lifeboat')
   function renderPhotoOnPage (photo_b64) {
     const innerImageHTML = `<img src="${photo_b64}" width="100%" />`;
     const imageElement = document.getElementById('image');
-    imageElement.innerHTML = innerImageHTML;      
+    imageElement.innerHTML = innerImageHTML;    
+    $scope.loadingPhotoReunion = false;  
   }
 
   function sendPhotoReunionInBase64ToServer (imageInBase64) {
+    $scope.sendingPhotoReunionToServer = true;
+    $scope.reunionPhotoStatus = 'Enviando imagem';
     boatFactory.saveReunionPhoto(imageInBase64, $scope.boat.id, $scope.dateForDB)
     .then((response) => {
-      $scope.reunionPhotoStatus = '';
+      $scope.sendingPhotoReunionToServer = false;
+      $scope.reunionPhotoStatus = 'Imagem salva';
       alert("Imagem salva com sucesso");
     });
   }
+
+  (function init () {
+    $scope.boat = JSON.parse(localStorage.getItem('boat'));
+    if (!$scope.boat) {
+      $window.location.href = '/';
+    } 
+  })();
 });

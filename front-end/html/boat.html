@@ -39,18 +39,24 @@
                 ng-show="selectedDate" 
                 ng-click="editMember()" 
                 class="md-raised"
-                ng-class="(members.length === 0) ? 'md-warn' : ''">
+                ng-class="(!loadingMembers && (members.length === 0)) 
+                    ? 'md-warn' 
+                    : ''">
                 Adicionar membro
             </md-button>
         </h2>
     </md-toolbar>
-    <span ng-show="loadingMembers && selectedDate">
-        <br>Carregando...<br>
-    </span>
-    <span ng-show="members.length === 0">
-        <br>Não há membros no seu bote, por favor, adicione-os clicando no botão
-        "ADICIONAR MEMBRO" à direita.<br>
-    </span>
+    <md-whiteframe style="padding: 2%;" ng-if="loadingMembers || (members.length === 0)"
+        class="md-whiteframe-1dp" 
+        layout="column">
+        <span ng-show="loadingMembers && selectedDate">
+            <br>Carregando...<br>
+        </span>
+        <span ng-show="!loadingMembers && (members.length === 0)">
+            <br>Não há membros no seu bote, por favor, adicione-os clicando no botão
+            "ADICIONAR MEMBRO" à direita.<br>
+        </span>
+    </md-whiteframe>
     <div>
         <div ng-repeat="member in members | orderBy:'name' | filter: {disconnected : '!' + 1}">            
             <md-whiteframe style="padding: 2%;"
@@ -87,7 +93,10 @@
         <md-whiteframe style="padding: 2%;"
             class="md-whiteframe-1dp" 
             layout="row">
-            <md-input-container class="md-block" flex>
+            <span ng-if="loadingMinistration">
+                <p>Carregando...</p>
+            </span>
+            <md-input-container class="md-block" flex ng-if="!loadingMinistration">
                 <label>
                     <span layout="row" ng-show="ministrationState == 'Salvando ministração...'" >
                         {{ ministrationState }} 
@@ -124,13 +133,27 @@
         <md-whiteframe style="padding: 2%;"
             class="md-whiteframe-1dp" 
             layout="column">
-            <input type="file" id="files" width="100%"/>
-            <br>
-            <output ng-show="reunionPhotoStatus != 'Selecione uma foto do encontro'"
-                id="image">
-            </output>
-            <br>
-            <strong>{{ reunionPhotoStatus }}</strong>
+            <span ng-if="loadingPhotoReunion">
+                <p>Carregando...</p>
+            </span>
+            <span ng-show="!loadingPhotoReunion">
+                <input type="file" id="files" width="100%"/>
+                <span ng-if="sendingPhotoReunionToServer">
+                    <br>
+                    <p>Enviando imagem...</p>
+                    <br>
+                    <md-progress-circular                            
+                        md-diameter="100px"
+                        md-mode="indeterminate">
+                    </md-progress-circular>
+                </span>
+                <br>
+                <output ng-show="reunionPhotoStatus != 'Selecione uma foto do encontro'"
+                    id="image">
+                </output>
+                <br>
+                Status: <strong>{{ reunionPhotoStatus }}</strong>
+            </span>
         </md-whiteframe>
     </div>
 
