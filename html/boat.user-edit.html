@@ -1,0 +1,96 @@
+<md-dialog>
+    <form ng-cloak>
+      <md-toolbar>
+        <div class="md-toolbar-tools">
+          <h2 ng-show="!selectedMember.id">Criar membro</h2>
+          <h2 ng-show="selectedMember.id">Editar membro</h2>
+          <span flex></span>
+          <md-button class="md-icon-button" 
+            ng-show="selectedMember.id"
+            ng-click="isDisconnectingMember = true">
+            <i class="material-icons" title="Desligar membro">
+                delete
+            </i>
+          </md-button>
+        </div>
+      </md-toolbar>
+      <md-dialog-content>
+        <div ng-show="!isDisconnectingMember" 
+            class="md-dialog-content" 
+            layout="column" 
+            layout-align="center start">
+            <md-input-container class="">
+                <label>Nome</label>
+                <input ng-model="selectedMember.name">
+            </md-input-container>
+            <md-input-container class="">
+                <label>Telefone</label>
+                <input ng-model="selectedMember.phone">
+            </md-input-container>
+            <md-input-container class="">
+                <label>Data de nascimento</label>
+                <md-datepicker md-current-view="year"
+                    ng-model="selectedMember.birthday">
+                </md-datepicker>
+            </md-input-container>
+            <md-input-container class="">           
+                <md-switch class="md-primary" 
+                    ng-true-value="'true'" ng-false-value="'false'"
+                    ng-model="selectedMember.is_member">
+                    Membro da igreja?
+                </md-switch>
+            </md-input-container>
+            <md-input-container class="">           
+                <md-switch class="md-primary" 
+                    ng-true-value="'true'" ng-false-value="'false'"
+                    ng-model="selectedMember.is_discipleship">
+                    Fez discipulado?
+                </md-switch>
+            </md-input-container>
+            <md-input-container class="">           
+                <md-switch class="md-primary" 
+                    ng-true-value="'true'" ng-false-value="'false'"
+                    ng-model="selectedMember.has_department">
+                    Está em algum departamento?
+                </md-switch>
+            </md-input-container>
+            <md-input-container class="">           
+                <md-switch class="md-primary" 
+                    ng-true-value="'true'" ng-false-value="'false'"
+                    ng-model="selectedMember.has_rhema">
+                    Fez Rhema?
+                </md-switch>
+            </md-input-container>
+        </div>
+
+        <div ng-show="isDisconnectingMember"
+            class="md-dialog-content" 
+            layout="column" 
+            layout-align="center start">
+            <md-input-container class="">
+                <label>Justificativa:</label>
+                <textarea ng-model="selectedMember.justification"></textarea>
+            </md-input-container>
+        </div>
+      </md-dialog-content>
+  
+      <md-dialog-actions layout="row">
+            <md-button ng-click="hideDialog()">
+                Cancelar
+            </md-button>
+            <span flex></span>
+            <md-button ng-disabled="!selectedMember.name" 
+                ng-show="!isDisconnectingMember"
+                ng-click="registryMember(selectedMember)">
+                Registrar
+            </md-button>
+            <md-button ng-disabled="!selectedMember.justification" 
+                ng-show="isDisconnectingMember"
+                ng-click="disconnectMember(selectedMember)">
+                Remover
+            </md-button>
+      </md-dialog-actions>
+    </form>
+  </md-dialog>
+  
+  
