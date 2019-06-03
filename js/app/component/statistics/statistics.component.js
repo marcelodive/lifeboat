@@ -11,4 +11,5 @@ async function StatisticsController($scope, statisticsFactory) {
   $scope.boatStatistics = boatStatistics;
   $scope.mostPresentMembers = mostPresentMembers;
   $scope.randMinistrations = randMinistrations;
+  $scope.randPhoto = randPhoto;
 }

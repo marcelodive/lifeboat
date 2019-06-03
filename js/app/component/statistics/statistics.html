@@ -22,6 +22,12 @@
     </md-content>
 
     <md-divider></md-divider>
+    
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="md-flex">Fotos e ministrações</h2>
+        </div>
+    </md-toolbar>
 
     <md-content layout-padding>
         <h3>Ministrações sortidas:</h3>
@@ -34,5 +40,15 @@
     </md-content>
 
     <md-divider></md-divider>
+
+    <md-content layout-padding>
+        <h3>Fotos sortidas:</h3>
+        <div ng-repeat="photo in randPhoto" class="padded" md-whiteframe="1">
+            <span><strong>{{photo.date}}</strong></span><br>
+            <img src="{{photo.photo_b64}}" width="100%" />
+            <small>({{photo.name}})</small>
+        </div>
+        <br>
+    </md-content>
 
 </div>
