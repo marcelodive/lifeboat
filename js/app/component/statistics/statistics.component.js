@@ -1,17 +1,14 @@
-const template = `
-  <h1>Hello {{ $ctrl.user }} {{ $ctrl.name }}</h1>
-`; 
-
 angular.module('lifeboat').component('statistics', {
-  template: template, 
+  templateUrl: './js/app/component/statistics/statistics.html',
   bindings: {
     user: '@'
   },
   controller: StatisticsController
 });
 
-function StatisticsController($scope, $element, $attrs) {
-  const ctrl = this;
-  
-  ctrl.name = 'Marcelo';
+async function StatisticsController($scope, statisticsFactory) {  
+  const {data: {boatStatistics, mostPresentMembers, randMinistrations, randPhoto}} = await statisticsFactory.getStatistics();
+  $scope.boatStatistics = boatStatistics;
+  $scope.mostPresentMembers = mostPresentMembers;
+  $scope.randMinistrations = randMinistrations;
 }

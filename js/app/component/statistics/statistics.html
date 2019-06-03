@@ -1,0 +1,38 @@
+<div layout="column">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 class="md-flex">Estatísticas (últimos três meses)</h2>
+        </div>
+    </md-toolbar>
+    <md-content layout="row" layout-align="space-around center" layout-wrap>
+        <div layout-padding layout="column" layout-align="center center" ng-repeat="(key, value) in boatStatistics">
+            <div class="md-display-3">{{value}}</div>
+            <div>{{key}}</div>
+        </div>
+    </md-content>
+
+    <md-divider></md-divider>
+
+    <md-content layout-padding>
+        <h3>Membros mais presentes:</h3>
+        <div layout="row" layout-wrap ng-repeat="member in mostPresentMembers">
+            <span>{{$index+1}}º <strong>{{member.member_name}}</strong> - {{member.num_presences}} presenças.</span>
+            <small>({{member.boat_name}})</small>
+        </div>    
+    </md-content>
+
+    <md-divider></md-divider>
+
+    <md-content layout-padding>
+        <h3>Ministrações sortidas:</h3>
+        <div ng-repeat="ministration in randMinistrations" class="padded" md-whiteframe="1">
+            <span><strong>{{ministration.date}}</strong></span><br>
+            <span>{{ministration.ministration}}</span><br>
+            <small>({{ministration.name}})</small>
+        </div>
+        <br>
+    </md-content>
+
+    <md-divider></md-divider>
+
+</div>

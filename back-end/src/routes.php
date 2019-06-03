@@ -176,3 +176,79 @@ $app->post('/member/disconnect', function ($request, $response, $args) {
 
     return $response->withJson(R::store($memberBean));
 });
+
+
+//statistics
+$app->get('/statistics', function ($request, $response, $args) {
+    $this->logger->info("/statistics");
+
+    $numActiveBoats = R::getAll('
+        SELECT count(DISTINCT boat_id) as count FROM presences
+        WHERE presences.date >= DATE_SUB(NOW(), INTERVAL 3 MONTH)
+    ')[0]['count'];
+
+    $numActiveMembers = R::getAll('
+        SELECT count(DISTINCT member_id) as count FROM presences
+        WHERE presences.date >= DATE_SUB(NOW(), INTERVAL 3 MONTH)
+    ')[0]['count'];
+
+    $numMinistrations = R::getAll('
+        SELECT count(id) as count FROM ministrations
+        WHERE date >= DATE_SUB(NOW(), INTERVAL 3 MONTH)
+    ')[0]['count'];
+
+    $numPhotos = R::getAll('
+        SELECT count(id) as count FROM `photos` 
+        WHERE date >= DATE_SUB(NOW(), INTERVAL 3 MONTH)
+        ')[0]['count'];
+
+    $numRegisteredPresences = R::getAll('
+        SELECT count(id) as count FROM presences
+        WHERE date >= DATE_SUB(NOW(), INTERVAL 3 MONTH) AND is_present = "true"
+    ')[0]['count'];
+
+    $mostPresentMembers = R::getAll('
+        SELECT COUNT(*) AS num_presences,
+            members.name AS member_name,
+            boats.name AS boat_name
+        FROM presences JOIN boats ON boats.id = presences.boat_id
+            JOIN members ON presences.member_id = members.id
+        WHERE date >= DATE_SUB(NOW(), INTERVAL 3 MONTH)
+        GROUP BY presences.member_id
+        ORDER BY num_presences DESC
+        LIMIT 5
+    ');
+
+    $randMinistrations = R::getAll('
+        SELECT ministrations.date, ministration, boats.name
+        FROM ministrations JOIN boats ON boats.id = ministrations.boat_id
+        WHERE date >= DATE_SUB(NOW(), INTERVAL 3 MONTH) 
+            AND ministration IS NOT NULL AND ministration <> ""
+        ORDER BY RAND()
+        LIMIT 5
+    ');
+
+    $randPhoto = R::getAll('
+        SELECT photos.*, boats.name
+        FROM photos
+        JOIN boats ON boats.id = photos.boat_id
+        WHERE date >= DATE_SUB(NOW(), INTERVAL 3 MONTH) 
+        ORDER BY RAND()
+        LIMIT 2
+    ');
+
+    $statistics = [
+        'boatStatistics' => [
+            'botes' => $numActiveBoats,
+            'membros' => $numActiveMembers,
+            'ministrações' => $numMinistrations,
+            'fotos' => $numPhotos,
+            'presenças registradas' => $numRegisteredPresences
+        ], 
+        'mostPresentMembers' => $mostPresentMembers,
+        'randMinistrations' => $randMinistrations,
+        'randPhoto' => $randPhoto
+    ];
+
+    return $response->withJson($statistics);
+});

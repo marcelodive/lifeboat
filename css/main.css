@@ -97,27 +97,21 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
-   .selected-date-picker {
-        padding-top: 20px; 
-    }
-
     .back-bottom {
         position: fixed !important;
         bottom: 10px;
     }
 
+   .selected-date-picker {
+        padding-top: 20px; 
+    }
 
-
-
-
-
-
-
-
-
-
-
-
+    .logo {
+        min-height: 100px;
+        height: 30vh; 
+        display:block; 
+        margin: auto;
+    }
 
 
 /* ==========================================================================
