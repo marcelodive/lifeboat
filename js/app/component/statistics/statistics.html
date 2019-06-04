@@ -1,4 +1,8 @@
-<div layout="column">
+<div layout="row" layout-align="space-around center" ng-if="!boatStatistics">
+    <span>Carregando informações estatísticas...</span>
+    <md-progress-circular md-mode="indeterminate" md-diameter="20px"></md-progress-circular>
+</div>
+<div layout="column" ng-if="boatStatistics">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2 class="md-flex">Estatísticas (últimos três meses)</h2>
