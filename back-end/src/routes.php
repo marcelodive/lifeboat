@@ -18,14 +18,14 @@ $app->get('/boat/{id}/members/{selectedDate}', function ($request, $response, $a
     $boatMembers = R::find('members', " boat_id = $boatId ");
 
     foreach ($boatMembers as $member) {
-        $presence  = R::findOne( 'presences', 
-            ' member_id = ? AND boat_id = ? AND date = ?', 
-            [$member['id'], $boatId, $selectedDate] 
+        $presence  = R::findOne( 'presences',
+            ' member_id = ? AND boat_id = ? AND date = ?',
+            [$member['id'], $boatId, $selectedDate]
         );
-        
+
         $member->is_present = !empty($presence) ? $presence->is_present : false;
     }
-    
+
     return $response->withJson($boatMembers);
 });
 
@@ -36,7 +36,7 @@ $app->get('/boat/{id}/ministration/{selectedDate}', function ($request, $respons
     $this->logger->info("/boat/{id}/ministration/{selectedDate}");
     $ministration = R::findOne('ministrations',
         ' boat_id = ? AND date = ?',
-        [$boatId, $selectedDate] 
+        [$boatId, $selectedDate]
     );
     return $response->withJson($ministration);
 });
@@ -49,9 +49,9 @@ $app->post('/boat/ministration', function ($request, $response, $args) {
 
     $this->logger->info("/boat/$boatId/ministration/$selectedDate");
 
-    $ministrationBean  = R::findOne('ministrations', 
-        ' boat_id = ? AND date = ?', 
-        [$boatId, $selectedDate] 
+    $ministrationBean  = R::findOne('ministrations',
+        ' boat_id = ? AND date = ?',
+        [$boatId, $selectedDate]
     );
 
     if (empty($ministrationBean)) {
@@ -72,7 +72,7 @@ $app->get('/boat/{id}/reunion-photo/{selectedDate}', function ($request, $respon
     $this->logger->info("/boat/{id}/reunion-photo/{selectedDate}");
     $reunionPhoto = R::findOne('photos',
         ' boat_id = ? AND date = ?',
-        [$boatId, $selectedDate] 
+        [$boatId, $selectedDate]
     );
     return $response->withJson($reunionPhoto);
 });
@@ -83,11 +83,11 @@ $app->post('/boat/reunion-photo', function ($request, $response, $args) {
     $selectedDate = $bodyData['selectedDate'];
     $photoReunionBase64 = $bodyData['photoBase64'];
 
-    $this->logger->info("/boat/$boatId/reunion-photo/$selectedDate");    
+    $this->logger->info("/boat/$boatId/reunion-photo/$selectedDate");
 
-    $reunionPhotoBean  = R::findOne('photos', 
-        ' boat_id = ? AND date = ?', 
-        [$boatId, $selectedDate] 
+    $reunionPhotoBean  = R::findOne('photos',
+        ' boat_id = ? AND date = ?',
+        [$boatId, $selectedDate]
     );
 
     if (empty($reunionPhotoBean)) {
@@ -113,9 +113,9 @@ $app->post('/member/presence', function ($request, $response, $args) {
 
     $this->logger->info("/member/presence/$memberId/$boatId/$selectedDate/$isPresent");
 
-    $presence  = R::findOne('presences', 
-        ' member_id = ? AND boat_id = ? AND date = ?', 
-        [$memberId, $boatId, $selectedDate] 
+    $presence  = R::findOne('presences',
+        ' member_id = ? AND boat_id = ? AND date = ?',
+        [$memberId, $boatId, $selectedDate]
     );
 
     if (empty($presence)){
@@ -177,6 +177,40 @@ $app->post('/member/disconnect', function ($request, $response, $args) {
     return $response->withJson(R::store($memberBean));
 });
 
+$app->get('/pivot-table', function ($request, $response, $args) {
+    $this->logger->info("/pivot-table");
+
+    $statistics = R::getAll('
+        SELECT
+            p.is_present presente,
+            p.`date` `data_do_encontro`,
+            m.name nome_membro,
+            m.disconnected membro_desconectado,
+            m.justification justificativa_de_desconexao,
+            m.phone telefone_do_membro,
+            m.birthday aniversario_do_membro,
+            m.is_member membro_eh_da_igreja,
+            m.is_discipleship membro_fez_discipulado,
+            m.has_department membro_tem_departamento,
+            m.has_rhema membro_fez_rhema,
+            m.last_edit ultima_edicao_do_membro,
+            b.name nome_bote,
+            mi.ministration ministracao
+        FROM
+            presences p
+                JOIN
+            members m ON m.id = p.member_id
+                JOIN
+            boats b ON b.id = p.boat_id
+                JOIN
+            ministrations mi ON b.id = mi.boat_id AND p.date = mi.date
+        WHERE
+            p.date >= DATE_SUB(NOW(), INTERVAL 6 MONTH);
+    ');
+
+    return $response->withJson($statistics);
+});
+
 
 //statistics
 $app->get('/statistics', function ($request, $response, $args) {
@@ -198,7 +232,7 @@ $app->get('/statistics', function ($request, $response, $args) {
     ')[0]['count'];
 
     $numPhotos = R::getAll('
-        SELECT count(id) as count FROM `photos` 
+        SELECT count(id) as count FROM `photos`
         WHERE date >= DATE_SUB(NOW(), INTERVAL 3 MONTH)
         ')[0]['count'];
 
@@ -222,7 +256,7 @@ $app->get('/statistics', function ($request, $response, $args) {
     $randMinistrations = R::getAll('
         SELECT ministrations.date, ministration, boats.name
         FROM ministrations JOIN boats ON boats.id = ministrations.boat_id
-        WHERE date >= DATE_SUB(NOW(), INTERVAL 3 MONTH) 
+        WHERE date >= DATE_SUB(NOW(), INTERVAL 3 MONTH)
             AND ministration IS NOT NULL AND ministration <> ""
         ORDER BY RAND()
         LIMIT 5
@@ -232,7 +266,7 @@ $app->get('/statistics', function ($request, $response, $args) {
         SELECT photos.*, boats.name
         FROM photos
         JOIN boats ON boats.id = photos.boat_id
-        WHERE date >= DATE_SUB(NOW(), INTERVAL 3 MONTH) 
+        WHERE date >= DATE_SUB(NOW(), INTERVAL 3 MONTH)
         ORDER BY RAND()
         LIMIT 2
     ');
@@ -244,7 +278,7 @@ $app->get('/statistics', function ($request, $response, $args) {
             'ministrações' => $numMinistrations,
             'fotos' => $numPhotos,
             'presenças registradas' => $numRegisteredPresences
-        ], 
+        ],
         'mostPresentMembers' => $mostPresentMembers,
         'randMinistrations' => $randMinistrations,
         'randPhoto' => $randPhoto

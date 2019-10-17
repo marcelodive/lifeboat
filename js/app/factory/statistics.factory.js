@@ -3,6 +3,9 @@ angular.module('lifeboat')
   return {
     getStatistics: () => {
         return $http.get(API.url + 'statistics');
+    },
+    getPivotTable: () => {
+      return $http.get(API.url + 'pivot-table');
     }
   };
 });

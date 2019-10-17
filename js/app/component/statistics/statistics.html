@@ -1,7 +1,21 @@
-<div layout="row" layout-align="space-around center" ng-if="!boatStatistics">
+<div layout="row" layout-align="space-around center" ng-if="!boatStatistics || !pivotTableData">
     <span>Carregando informações estatísticas...</span>
     <md-progress-circular md-mode="indeterminate" md-diameter="20px"></md-progress-circular>
 </div>
+
+<div layout="column">
+    <md-toolbar ng-show="pivotTableData">
+        <div class="md-toolbar-tools">
+            <h2 class="md-flex">Tabela dinâmica (últimos seis meses)</h2>
+        </div>
+    </md-toolbar>
+    <md-content layout="row" layout-align="space-around center" layout-wrap>
+        <div layout-padding layout="column" layout-align="center center">
+            <div id="pivot-table" style="min-width: 100%"></div>
+        </div>
+    </md-content>
+</div>
+
 <div layout="column" ng-if="boatStatistics">
     <md-toolbar>
         <div class="md-toolbar-tools">
@@ -22,11 +36,11 @@
         <div layout="row" layout-wrap ng-repeat="member in mostPresentMembers">
             <span>{{$index+1}}º <strong>{{member.member_name}}</strong> - {{member.num_presences}} presenças.</span>
             <small>({{member.boat_name}})</small>
-        </div>    
+        </div>
     </md-content>
 
     <md-divider></md-divider>
-    
+
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2 class="md-flex">Fotos e ministrações</h2>
